@@ -14,15 +14,13 @@ export class Home extends React.Component {
     return (
         <div>
             <SimpleAppBar onCreateTableFn={() => this.props.dispatch(createNewTable())} onEndTableFn={() => this.props.dispatch(endTable(this.props.tableNumber))}/>
-            <Rounds rounds = {r.rounds} winner = {r.winner} running = {r.running} tableNumber={this.props.tableNumber} gameNumber = {this.props.selectGameNumber-1} dispatch={this.props.dispatch}/>
-            <BasicPagination page={this.props.selectGameNumber} count={this.props.games.length} onChangeFn={(gameNumber)=> {
+            <Rounds rounds = {r.rounds} winner = {r.winner} running = {r.running} tableNumber={this.props.tableNumber} gameNumber = {this.props.selectGameNumber-1} dispatch={this.props.dispatch} page={this.props.selectGameNumber} count={this.props.games.length} onChangeFn={(gameNumber)=> {
                 this.props.dispatch(selectGameNumber(gameNumber))
             }}/>
             <SimpleTable names={this.props.names} values={this.props.totalScore}/>
-            {this.props.scoreCard.length > 0 ? <SimpleTable names={this.props.names} values={this.props.scoreCard[this.props.pageNumber && this.props.pageNumber-1 >= 0 ? this.props.pageNumber-1 : 0]}/> : ''}
-            <BasicPagination count={this.props.games.length-1} onChangeFn={(pageNumber)=> {
+            {this.props.scoreCard.length > 0 ? <SimpleTable names={this.props.names} values={this.props.scoreCard[this.props.pageNumber && this.props.pageNumber-1 >= 0 ? this.props.pageNumber-1 : 0]} count={this.props.games.length-1} onChangeFn={(pageNumber)=> {
                 this.props.dispatch(selectScoreCard(this.props.tableNumber, pageNumber))
-            }}/>
+            }}/> : ''}
         </div>
     )
   }

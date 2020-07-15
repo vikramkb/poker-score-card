@@ -114,6 +114,7 @@ export default function Rounds(props) {
                     </Card>
                 </CardContent>
                 <CardActions>
+                    <BasicPagination page={props.page} count={props.count} onChangeFn={props.onChangeFn}/>
                 </CardActions>
             </Card>
         </Paper>

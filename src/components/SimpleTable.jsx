@@ -12,11 +12,29 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import AlertDialog from "./AlertDialog";
+import BasicPagination from "./BasicPagination";
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({
     table: {
-        minWidth: 650,
+        minWidth: 300,
     },
+});
+
+const styles = theme => ({
+    root: {
+        display: 'flex',
+        marginTop: theme.spacing.unit * 3,
+        overflowX: 'hide',
+    },
+    table: {
+        minWidth: 340,
+    },
+    tableCell: {
+        paddingRight: 4,
+        paddingLeft: 5,
+        width: 100
+    }
 });
 
 function createData(name, score) {
@@ -34,6 +52,7 @@ export default function SimpleTable(props) {
     return (
         <Card className={classes.root} variant="outlined">
             <CardContent>
+                <Grid item xs={12}>
                 <TableContainer component={Paper}>
                     <Table className={classes.table} aria-label="simple table">
                         <TableHead>
@@ -41,7 +60,7 @@ export default function SimpleTable(props) {
                                 {
                                     ['name', 'score'].map(h => {
                                         return (
-                                            <TableCell>{h}</TableCell>
+                                            <TableCell className={classes.tableCell}>{h}</TableCell>
                                         )
                                     })
                                 }
@@ -57,7 +76,11 @@ export default function SimpleTable(props) {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                </Grid>
             </CardContent>
+            <CardActions>
+                {props.count ? <BasicPagination count={props.count} onChangeFn={props.onChangeFn}/> : ''}
+            </CardActions>
         </Card>
 
     );
