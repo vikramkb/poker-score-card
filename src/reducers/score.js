@@ -71,7 +71,7 @@ function getUpdatedScore(game, totalScore) {
 function getNewTable(players) {
     return {
         games: [getNewGame(players)],
-        scoreCard: [players.map(p => 0)],
+        scoreCard: [],
         totalScore: players.map(p => 0),
         running: true
     };
@@ -291,7 +291,7 @@ export default function score(state = defaultState, action = {}) {
             const newTable = getNewTable(state.names);
             newTables.push(newTable);
             return {
-                name: state.names,
+                names: state.names,
                 nameIdxMap: state.nameIdxMap,
                 tables: newTables
             };

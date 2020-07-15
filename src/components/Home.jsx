@@ -6,18 +6,20 @@ import Button from "@material-ui/core/Button";
 import SimpleTable from './SimpleTable.jsx';
 import {createNewTable, endTable, selectScoreCard} from '../action/ScoreAction';
 import BasicPagination from './BasicPagination.jsx';
+import SimpleAppBar from './AppBar.jsx';
 
 export class Home extends React.Component {
   render() {
       console.log("Home Props : ", this.props.totalScore);
     return (
         <div>
-            <Button variant="contained" color="primary" onClick={() => this.props.dispatch(createNewTable())}>
-                Create New Table
-            </Button>
-            <Button variant="contained" color="primary" onClick={() => this.props.dispatch(endTable(this.props.tableNumber))}>
-                Close Table
-            </Button>
+            <SimpleAppBar onCreateTableFn={() => this.props.dispatch(createNewTable())} onEndTableFn={() => this.props.dispatch(endTable(this.props.tableNumber))}/>
+            {/*<Button variant="contained" color="primary" onClick={() => this.props.dispatch(createNewTable())}>*/}
+            {/*    Create New Table*/}
+            {/*</Button>*/}
+            {/*<Button variant="contained" color="primary" onClick={() => this.props.dispatch(endTable(this.props.tableNumber))}>*/}
+            {/*    Close Table*/}
+            {/*</Button>*/}
             {this.props.games.map((r, idx) => <Rounds rounds = {r.rounds} winner = {r.winner} running = {r.running} tableNumber={this.props.tableNumber} gameNumber = {idx} dispatch={this.props.dispatch}/>)}
             <SimpleTable names={this.props.names} values={this.props.totalScore}/>
             {this.props.scoreCard.length > 0 ? <SimpleTable names={this.props.names} values={this.props.scoreCard[this.props.pageNumber && this.props.pageNumber-1 >= 0 ? this.props.pageNumber-1 : 0]}/> : ''}
