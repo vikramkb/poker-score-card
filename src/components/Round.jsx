@@ -6,6 +6,7 @@ import Switch from '@material-ui/core/Switch';
 import {playRound, foldRound, fixBet} from "../action/ScoreAction";
 export default function Round(props) {
     const round = props.round;
+    const tableNumber = props.tableNumber;
     const roundNumber = props.roundNumber;
     const gameNumber = props.gameNumber;
     const dispatch = props.dispatch;
@@ -16,9 +17,9 @@ export default function Round(props) {
         const handleChange = (event) => {
             console.log("playerIdx : ", playerIdx, " : roundNumber : ", roundNumber, " : player : ", player, " : fixed : ", fixed);
             if (event.target.checked) {
-                dispatch(playRound(gameNumber, roundNumber, playerIdx, event.target.name));
+                dispatch(playRound(tableNumber, gameNumber, roundNumber, playerIdx, event.target.name));
             } else {
-                dispatch(foldRound(gameNumber, roundNumber, playerIdx, event.target.name));
+                dispatch(foldRound(tableNumber, gameNumber, roundNumber, playerIdx, event.target.name));
             }
         };
 
@@ -39,7 +40,7 @@ export default function Round(props) {
     }
 
     function hanldeFixBet() {
-        dispatch(fixBet(gameNumber, roundNumber, bet));
+        dispatch(fixBet(tableNumber, gameNumber, roundNumber, bet));
     }
     return (
         <div>

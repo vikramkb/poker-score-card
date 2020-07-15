@@ -25,6 +25,7 @@ function createData(name, score) {
 
 
 export default function SimpleTable(props) {
+    console.log("Simple Table Prop : ", props);
     const rows = props.values.map((v, idx) => {
         return createData(props.names[idx], v);
     });

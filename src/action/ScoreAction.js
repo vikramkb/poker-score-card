@@ -5,6 +5,8 @@ export const FOLD_ROUND = 'FOLD_ROUND';
 export const PLAY_ROUND = 'PLAY_ROUND';
 export const FIX_BET = 'FIX_BET';
 export const SUBMIT_WINNER = 'SUBMIT_WINNER';
+export const CREATE_NEW_TABLE = 'CREATE_NEW_GAME';
+export const END_TABLE = 'END_GAME';
 
 export const addNewScore = newData => ({
   type: ADD_NEW_SCORE,
@@ -22,31 +24,44 @@ export const deleteScore = (index) => ({
   index
 });
 
-export const foldRound = (gameNumber, roundNumber, playerIdx, playerName) => ({
+export const foldRound = (tableNumber, gameNumber, roundNumber, playerIdx, playerName) => ({
   type: FOLD_ROUND,
+  tableNumber,
   gameNumber,
   roundNumber,
   playerName,
   playerIdx
 });
 
-export const fixBet = (gameNumber, roundNumber, bet) => ({
+export const fixBet = (tableNumber, gameNumber, roundNumber, bet) => ({
   type: FIX_BET,
+  tableNumber,
   gameNumber,
   roundNumber,
   bet
 });
 
-export const playRound = (gameNumber, roundNumber, playerIdx, playerName) => ({
+export const playRound = (tableNumber, gameNumber, roundNumber, playerIdx, playerName) => ({
   type: PLAY_ROUND,
+  tableNumber,
   gameNumber,
   roundNumber,
   playerName,
   playerIdx
 });
 
-export const submitWinner = (gameNumber, winner) => ({
+export const submitWinner = (tableNumber, gameNumber, winner) => ({
   type: SUBMIT_WINNER,
+  tableNumber,
   gameNumber,
   winner
+});
+
+export const endTable = (tableNumber) => ({
+  type: END_TABLE,
+  tableNumber
+});
+
+export const createNewTable = () => ({
+  type: CREATE_NEW_TABLE
 });

@@ -35,6 +35,7 @@ const useStyles = makeStyles({
 });
 export default function Rounds(props) {
     const rounds = props.rounds;
+    const tableNumber = props.tableNumber;
     const gameNumber = props.gameNumber;
     const dispatch = props.dispatch;
     const winner = props.winner;
@@ -44,7 +45,7 @@ export default function Rounds(props) {
 
 
     function handleWinnerSubmit() {
-        dispatch(submitWinner(gameNumber, finalWinner));
+        dispatch(submitWinner(tableNumber, gameNumber, finalWinner));
     }
     function finalRoundPlayer(gameNumber, players) {
         function handleChange(event) {
@@ -74,7 +75,7 @@ export default function Rounds(props) {
     }
 
     function roundDetails(idx, round) {
-        return <Round round={round} gameNumber={gameNumber} roundNumber={idx} dispatch={dispatch}/>
+        return <Round round={round} tableNumber={tableNumber} gameNumber={gameNumber} roundNumber={idx} dispatch={dispatch}/>
     }
 
     return (

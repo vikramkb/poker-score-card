@@ -5,7 +5,9 @@ import {
     PLAY_ROUND,
     FOLD_ROUND,
     FIX_BET,
-    SUBMIT_WINNER
+    SUBMIT_WINNER,
+    END_TABLE,
+    CREATE_NEW_TABLE
 } from "../action/ScoreAction";
 
 const names = ['Vikram', "Radha", "Sydulu", "Sharat"];
@@ -17,28 +19,8 @@ const nameIdxMap = {
 };
 const scoreCard = [];
 const totalScore = [0, 0, 0, 0];
+const firstRoundBet = 10;
 const games = [
-    {
-        rounds: [
-            {
-                bet: 10,
-                playerStatus: [{name: 'Vikram', action: 'playing'},{name: 'Radha', action: 'playing'}, {name: 'Sydulu', action: 'playing'}, {name: 'Sharat', action: 'playing'}],
-                fixed: true
-            },
-            {
-                bet: 10,
-                playerStatus: [{name: 'Vikram', action: 'playing'},{name: 'Radha', action: 'fold'}, {name: 'Sydulu', action: 'playing'}, {name: 'Sharat', action: 'fold'}],
-                fixed: true
-            },
-            {
-                bet: 40,
-                playerStatus: [{name: 'Vikram', action: 'playing'}, {name: 'Sydulu', action: 'playing'}],
-                fixed: true
-            }]
-        ,
-        winner: 'vikram',
-        running: false
-    },
     {
         rounds: [
             {
@@ -56,13 +38,17 @@ const games = [
         running: true
     }
 ];
-
+const tables = [{
+    games: games,
+    scoreCard: scoreCard,
+    totalScore: totalScore,
+    running: true
+}
+];
 const defaultState = {
-    scoreCard,
     names,
     nameIdxMap,
-    totalScore,
-    games
+    tables
 };
 function getUpdatedScore(game, totalScore) {
     const newTotalScore = totalScore.map(t => t);
@@ -81,61 +67,90 @@ function getUpdatedScore(game, totalScore) {
         newScoreCard
     };
 }
+function getNewTable(players) {
+    return {
+        games: [getNewGame(players)],
+        scoreCard: [players.map(p => 0)],
+        totalScore: players.map(p => 0),
+        running: true
+    };
+}
 
+function getNewGame(players) {
+    return     {
+        rounds: [
+            {
+                bet: firstRoundBet,
+                playerStatus: players.map(p=>{return {name: p, action: 'playing'}}),
+                fixed: true
+            },
+            {
+                bet: firstRoundBet,
+                playerStatus: players.map(p=>{return {name: p, action: 'playing'}}),
+                fixed: false
+            }
+        ]
+        ,
+        running: true
+    }
+}
 function getUpdatedPlayerStatus(state, action, foldOrPlaying) {
-    console.log("game number : ", action.gameNumber, " round number : ", action.roundNumber, "player idx : ", action.playerIdx);
-    const x = state.games[action.gameNumber].rounds[action.roundNumber].playerStatus[action.playerIdx];
-    console.log("play round", x);
-
-    let newPlayerStatus = state.games[action.gameNumber].rounds[action.roundNumber].playerStatus.map(p => {
+    const table = state.tables[action.tableNumber];
+    const game = table.games[action.gameNumber];
+    let newPlayerStatus = game.rounds[action.roundNumber].playerStatus.map(p => {
         return {name: p.name, action: p.action};
     });
     newPlayerStatus[action.playerIdx].action = foldOrPlaying;
     const newRound = {
-        ...state.games[action.gameNumber].rounds[action.roundNumber],
+        ...game.rounds[action.roundNumber],
         playerStatus: newPlayerStatus,
-        bet: state.games[action.gameNumber].rounds[action.roundNumber].bet,
-        fixed: state.games[action.gameNumber].rounds[action.roundNumber].fixed
+        bet: game.rounds[action.roundNumber].bet,
+        fixed: game.rounds[action.roundNumber].fixed
     };
 
-    let newRounds = state.games[action.gameNumber].rounds.map(r => r);
+    let newRounds = game.rounds.map(r => r);
     newRounds[action.roundNumber] = newRound;
 
     const newGame = {
-        ...state.games[action.gameNumber].rounds,
+        ...games,
         rounds: newRounds,
         running: true
     };
 
-    let newGames = state.games.map(g => g);
+    let newGames = table.games.map(g => g);
     newGames[action.gameNumber] = newGame;
+
+    let newTables = state.tables.map(t => t);
+    newTables[action.tableNumber] = {
+        games: newGames,
+        scoreCard: state.tables[action.tableNumber].scoreCard,
+        totalScore: state.tables[action.tableNumber].totalScore,
+        running: true
+    };
     return {
         ...state,
-        games: newGames,
-        scoreCard: state.scoreCard,
+        tables: newTables,
         names: state.names,
-        nameIdxMap: state.nameIdxMap,
-        totalScore: state.totalScore
+        nameIdxMap: state.nameIdxMap
     };
 }
 
 function getUpdatedRoundStatus(state, action) {
-    console.log("game number : ", action.gameNumber, " round number : ", action.roundNumber, "player idx : ", action.playerIdx);
-    const x = state.games[action.gameNumber].rounds[action.roundNumber].playerStatus[action.playerIdx];
-    console.log("play round", x);
+    const table = state.tables[action.tableNumber];
+    const game = table.games[action.gameNumber];
 
     const newRound = {
-        ...state.games[action.gameNumber].rounds[action.roundNumber],
-        playerStatus: state.games[action.gameNumber].rounds[action.roundNumber].playerStatus,
+        ...game.rounds[action.roundNumber],
+        playerStatus: game.rounds[action.roundNumber].playerStatus,
         bet: action.bet,
         fixed: true
     };
 
-    let newRounds = state.games[action.gameNumber].rounds.map(r => r);
+    let newRounds = game.rounds.map(r => r);
     const isRunning = newRounds.length !== 3;
     newRounds[action.roundNumber] = newRound;
     const playingPlayers = newRound.playerStatus.filter(p => p.action === 'playing');
-    if(newRounds.length !== 3) {
+    if(playingPlayers.length >= 2 &&newRounds.length !== 3) {
         newRounds.push({
             bet: newRound.bet,
             playerStatus: playingPlayers,
@@ -144,9 +159,9 @@ function getUpdatedRoundStatus(state, action) {
     }
 
     const newGame = {
-        ...state.games[action.gameNumber].rounds,
+        ...game.rounds,
         rounds: newRounds,
-        winner: state.games[action.gameNumber].winner,
+        winner: game.winner,
         running: isRunning
     };
     if(playingPlayers.length === 1) {
@@ -154,16 +169,23 @@ function getUpdatedRoundStatus(state, action) {
         newGame.running = false;
     }
 
-    let newGames = state.games.map(g => g);
+    let newGames = table.games.map(g => g);
     newGames[action.gameNumber] = newGame;
-    const newState={
-        ...state,
+
+    let newTables = state.tables.map(t => t);
+    newTables[action.tableNumber] = {
         games: newGames,
-        scoreCard: state.scoreCard,
-        names: state.names,
-        nameIdxMap: state.nameIdxMap,
-        totalScore: state.totalScore
+        scoreCard: state.tables[action.tableNumber].scoreCard,
+        totalScore: state.tables[action.tableNumber].totalScore,
+        running: true
     };
+    const newState = {
+        ...state,
+        tables: newTables,
+        names: state.names,
+        nameIdxMap: state.nameIdxMap
+    };
+
     if(playingPlayers.length === 1) {
         action.winner = playingPlayers[0].name;
         return submitWinner(newState, action);
@@ -172,59 +194,68 @@ function getUpdatedRoundStatus(state, action) {
 }
 
 function submitWinner(state, action) {
+    const table = state.tables[action.tableNumber];
+    const game = table.games[action.gameNumber];
+
     const newGame = {
-        ...state.games[action.gameNumber],
-        rounds: state.games[action.gameNumber].rounds,
+        ...game,
+        rounds: game.rounds,
         winner: action.winner,
         running: false
     };
 
-    let newGames = state.games.map(g => g);
+    let newGames = table.games.map(g => g);
     newGames[action.gameNumber] = newGame;
-    const newScore = getUpdatedScore(newGames[action.gameNumber], state.totalScore);
-    console.log("newScore", newScore);
-    let newScoreCard = state.scoreCard.map(s => s.map(k => k));
+    const newScore = getUpdatedScore(newGames[action.gameNumber], table.totalScore);
+    let newScoreCard = table.scoreCard.map(s => s.map(k => k));
     newScoreCard.push(newScore.newScoreCard);
-    return {
-        ...state,
+    newGames.push(getNewGame(state.names));
+
+    let newTables = state.tables.map(t => t);
+    newTables[action.tableNumber] = {
         games: newGames,
         scoreCard: newScoreCard,
+        totalScore: newScore.newTotalScore,
+        running: true
+    };
+    return {
+        ...state,
+        tables: newTables,
         names: state.names,
-        nameIdxMap: state.nameIdxMap,
-        totalScore: newScore.newTotalScore
+        nameIdxMap: state.nameIdxMap
     };
 }
 export default function score(state = defaultState, action = {}) {
     switch (action.type) {
-        case ADD_NEW_SCORE: {
-            const newScore = state.names.map(n => parseInt(action.newData[n], 10));
-            let newScoreTable = state.scoreCard.map(x => x);
-            newScoreTable.push(newScore);
-            return {
-                names: state.names,
-                nameIdxMap: state.nameIdxMap,
-                scoreCard: newScoreTable
-            };
-        }
-        case EDIT_SCORE: {
-            const index = action.index;
-            const newScore = state.names.map(n => parseInt(action.newData[n], 10));
-            let newScoreTable = state.scoreCard.map(x => x);
-            newScoreTable[index] = newScore;
-            return {
-                names: state.names,
-                nameIdxMap: state.nameIdxMap,
-                scoreCard: newScoreTable
-            };
-        }
-        case DELETE_SCORE: {
-            const deleteIndex = action.index;
-            return {
-                names: state.names,
-                nameIdxMap: state.nameIdxMap,
-                scoreCard: state.scoreCard.map((idx, x) => idx !== deleteIndex)
-            };
-        }
+        // case ADD_NEW_SCORE: {
+        //     const newScore = state.names.map(n => parseInt(action.newData[n], 10));
+        //     let newScoreTable = state.scoreCard.map(x => x);
+        //     newScoreTable.push(newScore);
+        //     return {
+        //         names: state.names,
+        //         nameIdxMap: state.nameIdxMap,
+        //         scoreCard: newScoreTable
+        //     };
+        // }
+        // case EDIT_SCORE: {
+        //     const index = action.index;
+        //     const newScore = state.names.map(n => parseInt(action.newData[n], 10));
+        //     let newScoreTable = state.scoreCard.map(x => x);
+        //     newScoreTable[index] = newScore;
+        //     return {
+        //         names: state.names,
+        //         nameIdxMap: state.nameIdxMap,
+        //         scoreCard: newScoreTable
+        //     };
+        // }
+        // case DELETE_SCORE: {
+        //     const deleteIndex = action.index;
+        //     return {
+        //         names: state.names,
+        //         nameIdxMap: state.nameIdxMap,
+        //         scoreCard: state.scoreCard.map((idx, x) => idx !== deleteIndex)
+        //     };
+        // }
         case PLAY_ROUND: {
             return getUpdatedPlayerStatus(state, action, 'playing');
         }
@@ -238,24 +269,33 @@ export default function score(state = defaultState, action = {}) {
         case SUBMIT_WINNER: {
             return submitWinner(state, action);
         }
+        case END_TABLE: {
+            const newTables = state.tables.map(t => t);
+            const table = state.tables[action.tableNumber];
+            newTables[action.tableNumber] =  {
+                ...table,
+                games: table.games.filter(g => !g.running),
+                scoreCard: table.scoreCard,
+                totalScore: table.totalScore,
+                running: false
+            };
+            return {
+                names,
+                nameIdxMap,
+                tables: newTables
+            };
+        }
+        case CREATE_NEW_TABLE: {
+            const newTables = tables.map(t=>t);
+            const newTable = getNewTable(state.names);
+            newTables.push(newTable);
+            return {
+                names,
+                nameIdxMap,
+                tables: newTables
+            };
+        }
         default:
             return state;
     }
 }
-
-// export default function score(state = {title : "report-ui"}, action={}) {
-//     const names = ['Vikram', "Radha", "Sydulu", "Sharat"];
-//     const nameIdxMap = {
-//         'Vikram': 0,
-//         'Radha': 1,
-//         'Sydulu': 2,
-//         'Sharat': 3
-//     };
-//     const scoreCard = [[0, 10, 20, 30],[90, 0, 20, 30],[0, 10, 20, 30],[0, 10, 20, 30]];
-//     state = {
-//         scoreCard,
-//         names,
-//         nameIdxMap
-//     };
-//     return state;
-// }
