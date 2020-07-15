@@ -7,7 +7,8 @@ import {
     FIX_BET,
     SUBMIT_WINNER,
     END_TABLE,
-    CREATE_NEW_TABLE
+    CREATE_NEW_TABLE,
+    SELECT_SCORE_CARD
 } from "../action/ScoreAction";
 
 const names = ['Vikram', "Radha", "Sydulu", "Sharat"];
@@ -290,8 +291,17 @@ export default function score(state = defaultState, action = {}) {
             const newTable = getNewTable(state.names);
             newTables.push(newTable);
             return {
-                names,
-                nameIdxMap,
+                name: state.names,
+                nameIdxMap: state.nameIdxMap,
+                tables: newTables
+            };
+        }
+        case SELECT_SCORE_CARD: {
+            const newTables = state.tables.map(t=>t);
+            newTables[action.tableNumber].pageNumber = action.pageNumber;
+            return {
+                names: state.names,
+                nameIdxMap: state.nameIdxMap,
                 tables: newTables
             };
         }

@@ -4,7 +4,8 @@ import MaterialTableDemo from './Table.jsx';
 import Rounds from './Rounds.jsx';
 import Button from "@material-ui/core/Button";
 import SimpleTable from './SimpleTable.jsx';
-import {createNewTable, endTable} from '../action/ScoreAction';
+import {createNewTable, endTable, selectScoreCard} from '../action/ScoreAction';
+import BasicPagination from './BasicPagination.jsx';
 
 export class Home extends React.Component {
   render() {
@@ -19,7 +20,10 @@ export class Home extends React.Component {
             </Button>
             {this.props.games.map((r, idx) => <Rounds rounds = {r.rounds} winner = {r.winner} running = {r.running} tableNumber={this.props.tableNumber} gameNumber = {idx} dispatch={this.props.dispatch}/>)}
             <SimpleTable names={this.props.names} values={this.props.totalScore}/>
-            {this.props.scoreCard.map(s => <SimpleTable names={this.props.names} values={s}/>)}
+            {this.props.scoreCard.length > 0 ? <SimpleTable names={this.props.names} values={this.props.scoreCard[this.props.pageNumber && this.props.pageNumber-1 >= 0 ? this.props.pageNumber-1 : 0]}/> : ''}
+            <BasicPagination count={this.props.games.length-1} onChangeFn={(pageNumber)=> {
+                this.props.dispatch(selectScoreCard(this.props.tableNumber, pageNumber))
+            }}/>
         </div>
     )
   }
@@ -32,7 +36,8 @@ const mapStateToProps = state => ({
   nameIdxMap: state.score.nameIdxMap,
   games: state.score.tables[state.score.tables.length-1].games,
   names: state.score.names,
-  tableNumber: state.score.tables.length-1
+  tableNumber: state.score.tables.length-1,
+  pageNumber: state.score.tables[state.score.tables.length-1].pageNumber
 });
 
 export default connect(mapStateToProps)(Home);
