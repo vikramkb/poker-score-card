@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Switch from '@material-ui/core/Switch';
-import {playRound, foldRound, fixBet, submitWinner} from "../action/ScoreAction";
+import {playRound, foldRound, fixBet, submitWinner, selectGameNumber} from "../action/ScoreAction";
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -15,6 +15,8 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import AlertDialog from './AlertDialog.jsx';
 import Round from './Round.jsx';
+import Paper from "@material-ui/core/Paper";
+import BasicPagination from "./BasicPagination";
 
 
 const useStyles = makeStyles({
@@ -47,6 +49,7 @@ export default function Rounds(props) {
     function handleWinnerSubmit() {
         dispatch(submitWinner(tableNumber, gameNumber, finalWinner));
     }
+
     function finalRoundPlayer(gameNumber, players) {
         function handleChange(event) {
             if (event.target.checked) {
@@ -56,54 +59,63 @@ export default function Rounds(props) {
 
         return (
             <FormControl component="fieldset">
-                  {/*<FormLabel component="legend">Decide Winner</FormLabel>*/}
-                  <RadioGroup row aria-label="position" name="position" defaultValue="top">
-                      {
-                          players.map(p => {
-                              return (<FormControlLabel
-                                  value={p.name}
-                                  control={<Radio color="primary" value={p.name} name={p.name} onChange={handleChange}/>}
-                                  label={p.name}
-                                  key={p.name}
-                                  labelPlacement="start"
-                              />)
-                          })
-                      }
-                  </RadioGroup>
-                </FormControl>
+                {/*<FormLabel component="legend">Decide Winner</FormLabel>*/}
+                <RadioGroup row aria-label="position" name="position" defaultValue="top">
+                    {
+                        players.map(p => {
+                            return (<FormControlLabel
+                                value={p.name}
+                                control={<Radio color="primary" value={p.name} name={p.name} onChange={handleChange}/>}
+                                label={<Typography variant="h6" component="h6" display="inline">{p.name}</Typography>}
+                                key={p.name}
+                                labelPlacement="start"
+                            />)
+                        })
+                    }
+                </RadioGroup>
+            </FormControl>
         )
     }
 
     function roundDetails(idx, round) {
-        return <Round round={round} tableNumber={tableNumber} gameNumber={gameNumber} roundNumber={idx} dispatch={dispatch}/>
+        return <Round round={round} tableNumber={tableNumber} gameNumber={gameNumber} roundNumber={idx}
+                      dispatch={dispatch}/>
     }
 
     return (
-        <Card className={classes.root} variant="outlined">
-            <CardContent>
-                <Typography className={classes.title} color="textSecondary" gutterBottom>
-                    {`Game Number : ${gameNumber + 1}`}
-                </Typography>
-                <Typography variant="h5" component="h2">
-                    {!running && winner ? `Winner: ${winner}` : "Running"}
-                </Typography>
-                <br></br>
-                {
-                    rounds.map((r, idx) => roundDetails(idx, r))
-                }
-            </CardContent>
-            <CardActions>
-                {
-                    rounds.length === 3 && !winner && !running ?
-                        <div>
-                            <h4> Choose Winner </h4>
-                            {finalRoundPlayer(gameNumber, rounds[2].playerStatus.filter(p => p.action === 'playing'))}
-                            <AlertDialog disableButton={!finalWinner} submitFn={handleWinnerSubmit} title={`Submit Winner : ${finalWinner}`}/>
-                        </div>
-                        : ''
-                }
-
-            </CardActions>
-        </Card>
+        <Paper elevation={3}>
+            <Card className={classes.root} variant="outlined">
+                <CardContent>
+                    <Typography variant="h6" component="h2">
+                        {`Game Number : ${gameNumber + 1}`}
+                    </Typography>
+                    <Typography variant="h6" component="h2">
+                        {!running && winner ? `Winner: ${winner}` : "Running"}
+                    </Typography>
+                    <br></br>
+                    {
+                        rounds.map((r, idx) => roundDetails(idx, r))
+                    }
+                    <Card className={classes.root} variant="outlined">
+                        <CardContent>
+                            {
+                                rounds.length === 3 && !winner && !running ?
+                                    <div>
+                                        <Typography className={classes.title} color="textPrimary">
+                                            Choose Winner
+                                        </Typography>
+                                        {finalRoundPlayer(gameNumber, rounds[2].playerStatus.filter(p => p.action === 'playing'))}
+                                        <AlertDialog disableButton={!finalWinner} submitFn={handleWinnerSubmit}
+                                                     title={`Submit Winner : ${finalWinner}`}/>
+                                    </div>
+                                    : ''
+                            }
+                        </CardContent>
+                    </Card>
+                </CardContent>
+                <CardActions>
+                </CardActions>
+            </Card>
+        </Paper>
     );
 }

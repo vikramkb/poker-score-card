@@ -20,7 +20,7 @@ export default function AlertDialog(props) {
 
     return (
         <div>
-            <Button variant="outlined" color="primary" onClick={handleClickOpen} disabled={props.disableButton}>
+            <Button variant="contained" color="primary" onClick={handleClickOpen} disabled={props.disableButton}>
                 Submit Winner
             </Button>
             <Dialog

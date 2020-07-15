@@ -8,7 +8,8 @@ import {
     SUBMIT_WINNER,
     END_TABLE,
     CREATE_NEW_TABLE,
-    SELECT_SCORE_CARD
+    SELECT_SCORE_CARD,
+    SELECT_GAME_NUMBER
 } from "../action/ScoreAction";
 
 const names = ['Vikram', "Radha", "Sydulu", "Sharat"];
@@ -49,7 +50,8 @@ const tables = [{
 const defaultState = {
     names,
     nameIdxMap,
-    tables
+    tables,
+    selectGameNumber: 1
 };
 function getUpdatedScore(game, totalScore) {
     const newTotalScore = totalScore.map(t => t);
@@ -223,7 +225,8 @@ function submitWinner(state, action) {
         ...state,
         tables: newTables,
         names: state.names,
-        nameIdxMap: state.nameIdxMap
+        nameIdxMap: state.nameIdxMap,
+        selectGameNumber: newTables[state.tables.length-1].games.length
     };
 }
 export default function score(state = defaultState, action = {}) {
@@ -304,6 +307,12 @@ export default function score(state = defaultState, action = {}) {
                 nameIdxMap: state.nameIdxMap,
                 tables: newTables
             };
+        }
+        case SELECT_GAME_NUMBER: {
+            return {
+                ...state,
+                selectGameNumber: action.selectGameNumber
+            }
         }
         default:
             return state;

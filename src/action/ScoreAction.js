@@ -8,6 +8,7 @@ export const SUBMIT_WINNER = 'SUBMIT_WINNER';
 export const CREATE_NEW_TABLE = 'CREATE_NEW_GAME';
 export const END_TABLE = 'END_GAME';
 export const SELECT_SCORE_CARD = 'SELECT_SCORE_CARD';
+export const SELECT_GAME_NUMBER = 'SELECT_GAME_NUMBER';
 
 export const addNewScore = newData => ({
   type: ADD_NEW_SCORE,
@@ -71,4 +72,9 @@ export const selectScoreCard = (tableNumber, pageNumber) => ({
   type: SELECT_SCORE_CARD,
   tableNumber,
   pageNumber
+});
+
+export const selectGameNumber = (selectGameNumber) => ({
+  type: SELECT_GAME_NUMBER,
+  selectGameNumber
 });

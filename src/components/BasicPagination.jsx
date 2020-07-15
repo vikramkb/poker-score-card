@@ -14,7 +14,7 @@ export default function BasicPagination(props) {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <Pagination count={props.count} color="primary" onChange={((event,pageNumber) => {props.onChangeFn(pageNumber)})}/>
+            <Pagination page={props.page} count={props.count} color="primary" onChange={((event,pageNumber) => {props.onChangeFn(pageNumber)})}/>
         </div>
     );
 }
