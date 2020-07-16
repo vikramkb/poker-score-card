@@ -20,41 +20,32 @@ const nameIdxMap = {
     'Sydulu': 2,
     'Sharat': 3
 };
-const scoreCard = [];
-const totalScore = [0, 0, 0, 0];
 const firstRoundBet = 10;
-const games = [
-    {
-        rounds: [
-            {
-                bet: 10,
-                playerStatus: [{name: 'Vikram', action: 'playing'},{name: 'Radha', action: 'playing'}, {name: 'Sydulu', action: 'playing'}, {name: 'Sharat', action: 'playing'}],
-                fixed: true
-            },
-            {
-                bet: 10,
-                playerStatus: [{name: 'Vikram', action: 'playing'},{name: 'Radha', action: 'playing'}, {name: 'Sydulu', action: 'playing'}, {name: 'Sharat', action: 'playing'}],
-                fixed: false
-            }
-        ]
-        ,
-        running: true
-    }
-];
-const tables = [{
-    games: games,
-    scoreCard: scoreCard,
-    totalScore: totalScore,
-    running: true
-}
-];
+// const games = [
+//     {
+//         rounds: [
+//             {
+//                 bet: 10,
+//                 playerStatus: [{name: 'Vikram', action: 'playing'},{name: 'Radha', action: 'playing'}, {name: 'Sydulu', action: 'playing'}],
+//                 fixed: true
+//             },
+//             {
+//                 bet: 10,
+//                 playerStatus: [{name: 'Vikram', action: 'playing'},{name: 'Radha', action: 'playing'}, {name: 'Sydulu', action: 'playing'}],
+//                 fixed: false
+//             }
+//         ]
+//         ,
+//         running: true
+//     }
+// ];
+//
+const tables = [];
 const defaultState = {
     names,
-    nameIdxMap,
-    tables,
-    selectGameNumber: 1
+    tables
 };
-function getUpdatedScore(game, totalScore) {
+function getUpdatedScore(game, totalScore, nameIdxMap) {
     const newTotalScore = totalScore.map(t => t);
     const newScoreCard = totalScore.map(t => 0);
     const tableAmount = game.rounds.map(r => {
@@ -71,12 +62,15 @@ function getUpdatedScore(game, totalScore) {
         newScoreCard
     };
 }
-function getNewTable(players) {
+function getNewTable(players, nameIdxMap) {
     return {
         games: [getNewGame(players)],
         scoreCard: [],
         totalScore: players.map(p => 0),
-        running: true
+        players: players,
+        running: true,
+        nameIdxMap,
+        selectGameNumber: 1
     };
 }
 
@@ -98,7 +92,7 @@ function getNewGame(players) {
         running: true
     }
 }
-function getUpdatedPlayerStatus(state, action, foldOrPlaying) {
+function getUpdatedPlayerStatus(state , action, foldOrPlaying) {
     const table = state.tables[action.tableNumber];
     const game = table.games[action.gameNumber];
     let newPlayerStatus = game.rounds[action.roundNumber].playerStatus.map(p => {
@@ -116,7 +110,6 @@ function getUpdatedPlayerStatus(state, action, foldOrPlaying) {
     newRounds[action.roundNumber] = newRound;
 
     const newGame = {
-        ...games,
         rounds: newRounds,
         running: true
     };
@@ -126,6 +119,7 @@ function getUpdatedPlayerStatus(state, action, foldOrPlaying) {
 
     let newTables = state.tables.map(t => t);
     newTables[action.tableNumber] = {
+        ...state.tables[action.tableNumber],
         games: newGames,
         scoreCard: state.tables[action.tableNumber].scoreCard,
         totalScore: state.tables[action.tableNumber].totalScore,
@@ -144,7 +138,6 @@ function getUpdatedRoundStatus(state, action) {
     const game = table.games[action.gameNumber];
 
     const newRound = {
-        ...game.rounds[action.roundNumber],
         playerStatus: game.rounds[action.roundNumber].playerStatus,
         bet: action.bet,
         fixed: true
@@ -178,6 +171,7 @@ function getUpdatedRoundStatus(state, action) {
 
     let newTables = state.tables.map(t => t);
     newTables[action.tableNumber] = {
+        ...state.tables[action.tableNumber],
         games: newGames,
         scoreCard: state.tables[action.tableNumber].scoreCard,
         totalScore: state.tables[action.tableNumber].totalScore,
@@ -210,13 +204,14 @@ function submitWinner(state, action) {
 
     let newGames = table.games.map(g => g);
     newGames[action.gameNumber] = newGame;
-    const newScore = getUpdatedScore(newGames[action.gameNumber], table.totalScore);
+    const newScore = getUpdatedScore(newGames[action.gameNumber], table.totalScore, table.nameIdxMap);
     let newScoreCard = table.scoreCard.map(s => s.map(k => k));
     newScoreCard.push(newScore.newScoreCard);
-    newGames.push(getNewGame(state.names));
+    newGames.push(getNewGame(state.tables[action.tableNumber].players));
 
     let newTables = state.tables.map(t => t);
     newTables[action.tableNumber] = {
+        ...newTables[action.tableNumber],
         games: newGames,
         scoreCard: newScoreCard,
         totalScore: newScore.newTotalScore,
@@ -291,14 +286,20 @@ export default function score(state = defaultState, action = {}) {
             };
         }
         case CREATE_NEW_TABLE: {
-            // const newTables = tables.map(t=>t);
-            // const newTable = getNewTable(state.names);
-            // newTables.push(newTable);
-            // return {
-            //     names: state.names,
-            //     nameIdxMap: state.nameIdxMap,
-            //     tables: newTables
-            // };
+            const players = Object.keys(action.players).filter(idx => action.players[idx]);
+            const nameIdxMap = {};
+            Object.keys(action.players).forEach((p, idx) => {
+                nameIdxMap[p] = idx
+            });
+            const newTable = getNewTable(players, nameIdxMap);
+            const newTables = state.tables.map(t => t);
+            newTables.push(newTable);
+            const newState = {
+                names: state.names,
+                tables: newTables
+            };
+            console.log(newState);
+            return newState;
         }
         case SELECT_SCORE_CARD: {
             const newTables = state.tables.map(t=>t);

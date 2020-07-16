@@ -30,6 +30,7 @@ export default function Players(props) {
     };
 
     function createTable() {
+        props.history.push("/home");
         props.dispatch(createNewTable(state));
     }
     return (

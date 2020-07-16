@@ -35,7 +35,7 @@ export default function AllTableScore(props) {
                     props.tables.map((t,idx) => {
                         return (<ScoreTable
                             title="Table Total Score"
-                            names={props.names}
+                            names={t.players}
                             totalScore={t.totalScore}
                             dispatch={props.dispatch}
                             history={props.history}

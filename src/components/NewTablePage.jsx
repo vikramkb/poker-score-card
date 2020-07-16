@@ -7,8 +7,8 @@ export class NewTablePage extends React.Component {
     render() {
         return (
             <div>
-                <SimpleAppBar showAllTables={()=> {this.showAllTables(this.props.history)}} onCreateTableFn={() => this.props.history.push("/")}/>
-                <Players playerNames={this.props.names}/>
+                <SimpleAppBar showAllTables={()=> {this.showAllTables(this.props.history)}} onCreateTableFn={() => this.props.history.push("/create-table")}/>
+                <Players playerNames={this.props.names} dispatch={this.props.dispatch} history={this.props.history}/>
             </div>
         )
     }

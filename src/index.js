@@ -18,7 +18,8 @@ ReactDOM.render(
         <Router>
             <div>
                 <Switch>
-                    <Route exact path="/" component={Home} />
+                    <Route exact path="/" component={AllTables} />
+                    <Route exact path="/home" component={Home} />
                     <Route exact path="/all-tables" component={AllTables} />
                     <Route exact path="/create-table" component={NewTablePage} />
                 </Switch>

@@ -10,26 +10,36 @@ import AllTableScore from "./AllTableScore.jsx";
 
 export class AllTables extends React.Component {
     render() {
+        const score = this.props.score;
+        if(!score.tables || score.tables.length === 0){
+            return (<SimpleAppBar showAllTables={()=> {this.showAllTables(this.props.history)}} onCreateTableFn={() => this.props.history.push("/create-table")}/>);
+        }
+        const tables = score.tables;
+        // const tableNumber = score.tables.length-1;
+        // const table = tables[tableNumber];
+        // const scoreCard = table.scoreCard;
+        // const totalScore = table.totalScore;
+        // const nameIdxMap = score.nameIdxMap;
+        // const games = table.games;
+        const names = score.names;
+        // const pageNumber = table.pageNumber;
+        // const selectGameNumber = score.selectGameNumber ? score.selectGameNumber : 1;
+
         return (
             <div>
-                <SimpleAppBar showAllTables={()=> {this.showAllTables(this.props.history)}} onCreateTableFn={() => this.props.history.push("/")}/>
-                <AllTableScore tables={this.props.tables} names={this.props.names} dispatch={this.props.dispatch} history={this.props.history}/>
+                <SimpleAppBar showAllTables={()=> {this.showAllTables(this.props.history)}} onCreateTableFn={() => this.props.history.push("/create-table")}/>
+                <AllTableScore
+                    tables={tables}
+                    names={names}
+                    dispatch={this.props.dispatch}
+                    history={this.props.history}/>
             </div>
         )
     }
 }
 
 const mapStateToProps = state => ({
-    score: state.score,
-    tables: state.score.tables,
-    scoreCard: state.score.tables[state.score.tables.length-1].scoreCard,
-    totalScore: state.score.tables[state.score.tables.length-1].totalScore,
-    nameIdxMap: state.score.nameIdxMap,
-    games: state.score.tables[state.score.tables.length-1].games,
-    names: state.score.names,
-    tableNumber: state.score.tables.length-1,
-    pageNumber: state.score.tables[state.score.tables.length-1].pageNumber,
-    selectGameNumber: state.score.selectGameNumber ? state.score.selectGameNumber : 1
+    score: state.score
 });
 
 export default connect(mapStateToProps)(AllTables);

@@ -26,10 +26,13 @@ function createData(name, score) {
 
 export default function SimpleTable(props) {
     console.log("Simple Table Prop : ", props);
+    const classes = useStyles();
+    if(!props.values || props.values.length === 0) {
+        return <div />;
+    }
     const rows = props.values.map((v, idx) => {
         return createData(props.names[idx], v);
     });
-    const classes = useStyles();
 
     return (
         <Card className={classes.root} variant="outlined">

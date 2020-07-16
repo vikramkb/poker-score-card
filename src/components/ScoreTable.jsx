@@ -42,7 +42,7 @@ export default function ScoreTable(props) {
                     props.navigateToPlayPage ?
                         <Button variant="contained" color="primary" onClick={()=>{
                             props.dispatch(setTableNumber(props.tableNumber));
-                            props.history.push("/");
+                            props.history.push("/home");
                         }}>
                             Playing Page
                         </Button> : ''

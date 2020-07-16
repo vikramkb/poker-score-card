@@ -26,6 +26,7 @@ const useStyles = makeStyles({
 });
 
 export default function ScoreTable(props) {
+    console.log("Score Table", props);
     const classes = useStyles();
     return (
         <Card className={classes.root} variant="root">
