@@ -125,7 +125,7 @@ export default function Game(props) {
             <CardActions>
                 <BasicPagination page={props.page} count={props.count} onChangeFn={props.onChangeFn}/>
                 {
-                    running ?
+                    props.tableRunning ?
                     <Button variant="contained" color="primary" onClick={() => {
                         props.dispatch(endTable(props.tableNumber))
                     }}>

@@ -36,6 +36,7 @@ export class Home extends React.Component {
                 rounds = {r.rounds}
                 winner = {r.winner}
                 running = {r.running}
+                tableRunning = {table.running}
                 tableNumber={tableNumber}
                 gameNumber = {selectedGameNumber-1}
                 dispatch={this.props.dispatch}
@@ -63,6 +64,7 @@ export class Home extends React.Component {
                 games={games}
                 dispatch={this.props.dispatch}
                 history={this.props.history}
+                tableNumber={tableNumber}
             />
         </div>
     )
