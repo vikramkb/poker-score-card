@@ -26,9 +26,9 @@ export class Home extends React.Component {
       const games = table.games;
       const names = table.players;
       const pageNumber = table.pageNumber;
-      const selectGameNumber = score.selectGameNumber ? score.selectGameNumber : 1;
+      const selectedGameNumber = score.selectGameNumber ? score.selectGameNumber : 1;
 
-    const r = games[selectGameNumber-1];
+    const r = games[selectedGameNumber-1];
     return (
         <div>
             <SimpleAppBar showAllTables={()=> {this.showAllTables(this.props.history)}} onCreateTableFn={() => this.props.history.push("/create-table")}/>
@@ -37,9 +37,9 @@ export class Home extends React.Component {
                 winner = {r.winner}
                 running = {r.running}
                 tableNumber={tableNumber}
-                gameNumber = {selectGameNumber-1}
+                gameNumber = {selectedGameNumber-1}
                 dispatch={this.props.dispatch}
-                page={selectGameNumber}
+                page={selectedGameNumber}
                 count={games.length}
                 onChangeFn={(gameNumber)=> {
                 this.props.dispatch(selectGameNumber(gameNumber))
@@ -51,6 +51,8 @@ export class Home extends React.Component {
                 scoreCard={scoreCard}
                 pageNumber={pageNumber}
                 games={games}
+                dispatch={this.props.dispatch}
+                history={this.props.history}
             />
             <GameScore
                 title="Table Total Score"
@@ -59,6 +61,8 @@ export class Home extends React.Component {
                 scoreCard={scoreCard}
                 pageNumber={pageNumber}
                 games={games}
+                dispatch={this.props.dispatch}
+                history={this.props.history}
             />
         </div>
     )

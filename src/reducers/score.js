@@ -15,25 +15,6 @@ import {
 
 const names = ['Vikram', "Radhakrishna", "Sydulu", "Sharat", "Konda", "Swathi", "Madhan", "Thirapathi Rao", "Ramakrishna", "Ramakrishna Peddabbai", "Gopi", "Sydule Kukka", "Sydulu Thota"];
 const firstRoundBet = 10;
-// const games = [
-//     {
-//         rounds: [
-//             {
-//                 bet: 10,
-//                 playerStatus: [{name: 'Vikram', action: 'playing'},{name: 'Radha', action: 'playing'}, {name: 'Sydulu', action: 'playing'}],
-//                 fixed: true
-//             },
-//             {
-//                 bet: 10,
-//                 playerStatus: [{name: 'Vikram', action: 'playing'},{name: 'Radha', action: 'playing'}, {name: 'Sydulu', action: 'playing'}],
-//                 fixed: false
-//             }
-//         ]
-//         ,
-//         running: true
-//     }
-// ];
-//
 const tables = [];
 const defaultState = {
     names,

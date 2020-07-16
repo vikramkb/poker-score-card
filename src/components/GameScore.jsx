@@ -37,6 +37,7 @@ export default function ScoreTable(props) {
                 {props.scoreCard.length > 0 ? <SimpleTable names={props.names}
                                                            values={props.scoreCard[props.pageNumber && props.pageNumber - 1 >= 0 ? props.pageNumber - 1 : 0]}
                                                            count={props.games.length - 1} onChangeFn={(pageNumber) => {
+
                     props.dispatch(selectScoreCard(props.tableNumber, pageNumber))
                 }}/> : ''}
             </CardContent>
