@@ -15,24 +15,8 @@ import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({
     table: {
-        minWidth: 300,
+        width: "100vw",
     },
-});
-
-const styles = theme => ({
-    root: {
-        display: 'flex',
-        marginTop: theme.spacing.unit * 3,
-        overflowX: 'hide',
-    },
-    table: {
-        minWidth: 340,
-    },
-    tableCell: {
-        paddingRight: 4,
-        paddingLeft: 5,
-        width: 100
-    }
 });
 
 function createData(name, score) {
