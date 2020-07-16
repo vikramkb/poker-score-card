@@ -291,14 +291,14 @@ export default function score(state = defaultState, action = {}) {
             };
         }
         case CREATE_NEW_TABLE: {
-            const newTables = tables.map(t=>t);
-            const newTable = getNewTable(state.names);
-            newTables.push(newTable);
-            return {
-                names: state.names,
-                nameIdxMap: state.nameIdxMap,
-                tables: newTables
-            };
+            // const newTables = tables.map(t=>t);
+            // const newTable = getNewTable(state.names);
+            // newTables.push(newTable);
+            // return {
+            //     names: state.names,
+            //     nameIdxMap: state.nameIdxMap,
+            //     tables: newTables
+            // };
         }
         case SELECT_SCORE_CARD: {
             const newTables = state.tables.map(t=>t);

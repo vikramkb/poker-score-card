@@ -15,7 +15,7 @@ export class Home extends React.Component {
     const r = this.props.games[this.props.selectGameNumber-1];
     return (
         <div>
-            <SimpleAppBar showAllTables={()=> {this.showAllTables(this.props.history)}} onCreateTableFn={() => this.props.history.push("/")}/>
+            <SimpleAppBar showAllTables={()=> {this.showAllTables(this.props.history)}} onCreateTableFn={() => this.props.history.push("/create-table")}/>
             <Game rounds = {r.rounds} winner = {r.winner} running = {r.running} tableNumber={this.props.tableNumber} gameNumber = {this.props.selectGameNumber-1} dispatch={this.props.dispatch} page={this.props.selectGameNumber} count={this.props.games.length} onChangeFn={(gameNumber)=> {
                 this.props.dispatch(selectGameNumber(gameNumber))
             }}/>

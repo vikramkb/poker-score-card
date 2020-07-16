@@ -65,8 +65,9 @@ export const endTable = (tableNumber) => ({
   tableNumber
 });
 
-export const createNewTable = () => ({
-  type: CREATE_NEW_TABLE
+export const createNewTable = (players) => ({
+  type: CREATE_NEW_TABLE,
+  players
 });
 
 export const selectScoreCard = (tableNumber, pageNumber) => ({

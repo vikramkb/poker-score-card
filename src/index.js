@@ -9,6 +9,7 @@ import { applyMiddleware, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import appStore from './reducers';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import NewTablePage from "./components/NewTablePage.jsx";
 export const store = createStore(appStore, applyMiddleware(thunkMiddleware));
 
 
@@ -19,6 +20,7 @@ ReactDOM.render(
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/all-tables" component={AllTables} />
+                    <Route exact path="/create-table" component={NewTablePage} />
                 </Switch>
 
             </div>
