@@ -22,6 +22,8 @@ import BasicPagination from "./BasicPagination.jsx";
 const useStyles = makeStyles({
     root: {
         minWidth: 275,
+        padding: "1em",
+        margin: "2em"
     },
     bullet: {
         display: 'inline-block',
@@ -35,7 +37,7 @@ const useStyles = makeStyles({
         marginBottom: 12,
     },
 });
-export default function Rounds(props) {
+export default function Game(props) {
     const rounds = props.rounds;
     const tableNumber = props.tableNumber;
     const gameNumber = props.gameNumber;
@@ -83,40 +85,34 @@ export default function Rounds(props) {
     }
 
     return (
-        <Paper elevation={3}>
-            <Card className={classes.root} variant="outlined">
-                <CardContent>
-                    <Typography variant="h6" component="h2">
-                        {`Game Number : ${gameNumber + 1}`}
-                    </Typography>
-                    <Typography variant="h6" component="h2">
-                        {!running && winner ? `Winner: ${winner}` : "Running"}
-                    </Typography>
-                    <br></br>
-                    {
-                        rounds.map((r, idx) => roundDetails(idx, r))
-                    }
-                    <Card className={classes.root} variant="outlined">
-                        <CardContent>
-                            {
-                                rounds.length === 3 && !winner && !running ?
-                                    <div>
-                                        <Typography className={classes.title} color="textPrimary">
-                                            Choose Winner
-                                        </Typography>
-                                        {finalRoundPlayer(gameNumber, rounds[2].playerStatus.filter(p => p.action === 'playing'))}
-                                        <AlertDialog disableButton={!finalWinner} submitFn={handleWinnerSubmit}
-                                                     title={`Submit Winner : ${finalWinner}`}/>
-                                    </div>
-                                    : ''
-                            }
-                        </CardContent>
-                    </Card>
-                </CardContent>
-                <CardActions>
-                    <BasicPagination page={props.page} count={props.count} onChangeFn={props.onChangeFn}/>
-                </CardActions>
-            </Card>
-        </Paper>
+        <Card className={classes.root} variant="outlined">
+            <CardContent>
+                <Typography variant="h6" component="h2">
+                    {`Game Number : ${gameNumber + 1}`}
+                </Typography>
+                <Typography variant="h6" component="h2">
+                    {!running && winner ? `Winner: ${winner}` : "Running"}
+                </Typography>
+                <br></br>
+                {
+                    rounds.map((r, idx) => roundDetails(idx, r))
+                }
+                {
+                    rounds.length === 3 && !winner && !running ?
+                        <div>
+                            <Typography className={classes.title} color="textPrimary">
+                                Choose Winner
+                            </Typography>
+                            {finalRoundPlayer(gameNumber, rounds[2].playerStatus.filter(p => p.action === 'playing'))}
+                            <AlertDialog disableButton={!finalWinner} submitFn={handleWinnerSubmit}
+                                         title={`Submit Winner : ${finalWinner}`}/>
+                        </div>
+                        : ''
+                }
+            </CardContent>
+            <CardActions>
+                <BasicPagination page={props.page} count={props.count} onChangeFn={props.onChangeFn}/>
+            </CardActions>
+        </Card>
     );
 }
