@@ -9,10 +9,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
-import AlertDialog from "./AlertDialog";
-import BasicPagination from "./BasicPagination";
+import BasicPagination from "./BasicPagination.jsx";
 import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({

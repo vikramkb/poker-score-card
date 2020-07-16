@@ -5,8 +5,8 @@ import Rounds from './Rounds.jsx';
 import Button from "@material-ui/core/Button";
 import SimpleTable from './SimpleTable.jsx';
 import {createNewTable, endTable, selectScoreCard, selectGameNumber} from '../action/ScoreAction';
-import BasicPagination from './BasicPagination.jsx';
 import SimpleAppBar from './AppBar.jsx';
+import Typography from '@material-ui/core/Typography';
 
 export class Home extends React.Component {
   render() {
@@ -17,6 +17,9 @@ export class Home extends React.Component {
             <Rounds rounds = {r.rounds} winner = {r.winner} running = {r.running} tableNumber={this.props.tableNumber} gameNumber = {this.props.selectGameNumber-1} dispatch={this.props.dispatch} page={this.props.selectGameNumber} count={this.props.games.length} onChangeFn={(gameNumber)=> {
                 this.props.dispatch(selectGameNumber(gameNumber))
             }}/>
+            <Typography variant="h5" gutterBottom>
+                Table Total Score
+            </Typography>
             <SimpleTable names={this.props.names} values={this.props.totalScore}/>
             {this.props.scoreCard.length > 0 ? <SimpleTable names={this.props.names} values={this.props.scoreCard[this.props.pageNumber && this.props.pageNumber-1 >= 0 ? this.props.pageNumber-1 : 0]} count={this.props.games.length-1} onChangeFn={(pageNumber)=> {
                 this.props.dispatch(selectScoreCard(this.props.tableNumber, pageNumber))
