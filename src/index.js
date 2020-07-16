@@ -3,11 +3,12 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import './index.css';
 import Home from './components/Home.jsx';
+import AllTables from './components/AllTables.jsx';
 import * as serviceWorker from './serviceWorker';
 import { applyMiddleware, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import appStore from './reducers';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 export const store = createStore(appStore, applyMiddleware(thunkMiddleware));
 
 
@@ -15,11 +16,11 @@ ReactDOM.render(
     <Provider store={store}>
         <Router>
             <div>
-                <Route
-                    path="/"
-                    exact
-                    component={Home}
-                />
+                <Switch>
+                    <Route exact path="/" component={Home} />
+                    <Route exact path="/all-tables" component={AllTables} />
+                </Switch>
+
             </div>
         </Router>
     </Provider>,

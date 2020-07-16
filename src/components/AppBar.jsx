@@ -95,14 +95,15 @@ export default function SimpleAppBar(props) {
                                 <ListItemText primary="Create New Table" />
                             </StyledMenuItem>
                             <StyledMenuItem onClick={() => {
-                                props.onEndTableFn();
+                                props.showAllTables();
                                 handleClose();
                             }}>
                                 <ListItemIcon>
                                     <DraftsIcon fontSize="small" />
                                 </ListItemIcon>
-                                <ListItemText primary="Close Table" />
+                                <ListItemText primary="Show Tables" />
                             </StyledMenuItem>
+
                         </StyledMenu>
                     </div>
                     </div>

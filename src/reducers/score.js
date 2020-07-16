@@ -2,6 +2,7 @@ import {
     ADD_NEW_SCORE,
     EDIT_SCORE,
     DELETE_SCORE,
+    SET_TABLE_NUMBER,
     PLAY_ROUND,
     FOLD_ROUND,
     FIX_BET,
@@ -312,6 +313,12 @@ export default function score(state = defaultState, action = {}) {
             return {
                 ...state,
                 selectGameNumber: action.selectGameNumber
+            }
+        }
+        case SET_TABLE_NUMBER: {
+            return {
+                ...state,
+                tableNumber: action.tableNumber
             }
         }
         default:
