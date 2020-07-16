@@ -9,6 +9,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -40,19 +43,26 @@ export default function Round(props) {
         };
 
         return (
-            <span>
-            <Typography variant="h6" component="h6" display="inline">
-                {player.name}
-            </Typography>
-            <Switch
-                checked={player.action === 'playing'}
-                onChange={handleChange}
-                color="primary"
-                name={player}
-                disabled={fixed}
-                inputProps={{'aria-label': 'primary checkbox'}}
+            <FormControlLabel
+                control={
+                    <span>
+                        <Typography variant="h6" component="h6" display="inline">
+                            {player.name}
+                        </Typography>
+
+                        <Switch
+                        checked={player.action === 'playing'}
+                        onChange={handleChange}
+                        color="primary"
+                        name={player}
+                        disabled={fixed}
+                        inputProps={{'aria-label': 'primary checkbox'}}
+                        />
+                        |
+                    </span>
+                }
+                label={''}
             />
-        </span>
         )
 
     }
@@ -77,7 +87,9 @@ export default function Round(props) {
                         <br></br>
                         <br></br>
                         {
-                            round.playerStatus.map((p, idx) => player(idx, roundNumber, p, round.fixed))
+                            <FormGroup row>
+                                {round.playerStatus.map((p, idx) => player(idx, roundNumber, p, round.fixed))}
+                            </FormGroup>
                         }
                     </CardContent>
                     <CardActions>

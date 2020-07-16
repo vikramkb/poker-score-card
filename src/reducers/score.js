@@ -275,7 +275,6 @@ export default function score(state = defaultState, action = {}) {
             };
             return {
                 names,
-                nameIdxMap,
                 tables: newTables
             };
         }
