@@ -13,13 +13,7 @@ import {
     SELECT_GAME_NUMBER
 } from "../action/ScoreAction";
 
-const names = ['Vikram', "Radha", "Sydulu", "Sharat"];
-const nameIdxMap = {
-    'Vikram': 0,
-    'Radha': 1,
-    'Sydulu': 2,
-    'Sharat': 3
-};
+const names = ['Vikram', "Radhakrishna", "Sydulu", "Sharat", "Konda", "Swathi", "Madhan", "Thirapathi Rao", "Ramakrishna", "Ramakrishna Peddabbai", "Gopi", "Sydule Kukka", "Sydulu Thota"];
 const firstRoundBet = 10;
 // const games = [
 //     {

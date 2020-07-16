@@ -43,7 +43,7 @@ export default function SimpleTable(props) {
                         <TableHead>
                             <TableRow>
                                 {
-                                    ['name', 'score'].map(h => {
+                                    ['Name', 'Score'].map(h => {
                                         return (
                                             <TableCell className={classes.tableCell}>{h}</TableCell>
                                         )
