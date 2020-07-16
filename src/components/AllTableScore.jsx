@@ -40,7 +40,7 @@ export default function AllTableScore(props) {
                             dispatch={props.dispatch}
                             history={props.history}
                             tableNumber={idx+1}
-                            showPlayingButton={true}
+                            navigateToPlayPage={true}
                         />)
                     })
                 }

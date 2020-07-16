@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Switch from '@material-ui/core/Switch';
-import {playRound, foldRound, fixBet, submitWinner, selectGameNumber} from "../action/ScoreAction";
+import {playRound, foldRound, fixBet, endTable, submitWinner, selectGameNumber, setTableNumber} from "../action/ScoreAction";
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -36,6 +36,12 @@ const useStyles = makeStyles({
     pos: {
         marginBottom: 12,
     },
+    spacing: {
+        marginRight: 20,
+        marginLeft: 5,
+        fontSize: "1.2em",
+        fontWeight: "bold"
+    }
 });
 export default function Game(props) {
     const rounds = props.rounds;
@@ -87,12 +93,18 @@ export default function Game(props) {
     return (
         <Card className={classes.root} variant="outlined">
             <CardContent>
-                <Typography variant="h6" component="h2">
+                <Typography variant="h6" component="h2" display="inline" className={classes.spacing}>
+                    {`Table Number : ${tableNumber + 1}`}
+                </Typography>
+                <Typography variant="h6" component="h2" display="inline" className={classes.spacing}>
                     {`Game Number : ${gameNumber + 1}`}
                 </Typography>
-                <Typography variant="h6" component="h2">
-                    {!running && winner ? `Winner: ${winner}` : "Running"}
+                <Typography variant="h6" component="h2" display="inline" className={classes.spacing}>
+                    {`${!running && winner ? `Winner: ${winner}` : "Status: Running"}`}
                 </Typography>
+                {/*<Typography variant="h6" component="h2">*/}
+                {/*    {!running && winner ? `Winner: ${winner}` : "Running"}*/}
+                {/*</Typography>*/}
                 <br></br>
                 {
                     rounds.map((r, idx) => roundDetails(idx, r))
@@ -112,6 +124,11 @@ export default function Game(props) {
             </CardContent>
             <CardActions>
                 <BasicPagination page={props.page} count={props.count} onChangeFn={props.onChangeFn}/>
+                <Button variant="contained" color="primary" onClick={()=>{
+                    props.dispatch(endTable(props.tableNumber))
+                }}>
+                    Close Table
+                </Button>
             </CardActions>
         </Card>
     );

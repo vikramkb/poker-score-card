@@ -38,12 +38,15 @@ export default function ScoreTable(props) {
                 <SimpleTable names={props.names} values={props.totalScore}/>
             </CardContent>
             <CardActions>
-                <Button variant="contained" color="primary" onClick={()=>{
-                    props.dispatch(setTableNumber(props.tableNumber));
-                    props.history.push("/");
-                }}>
-                    Continue Playing
-                </Button>
+                {
+                    props.navigateToPlayPage ?
+                        <Button variant="contained" color="primary" onClick={()=>{
+                            props.dispatch(setTableNumber(props.tableNumber));
+                            props.history.push("/");
+                        }}>
+                            Playing Page
+                        </Button> : ''
+                }
             </CardActions>
         </Card>
     )
