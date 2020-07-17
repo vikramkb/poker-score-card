@@ -10,6 +10,7 @@ export const END_TABLE = 'END_GAME';
 export const SELECT_SCORE_CARD = 'SELECT_SCORE_CARD';
 export const SELECT_GAME_NUMBER = 'SELECT_GAME_NUMBER';
 export const SET_TABLE_NUMBER = 'SET_TABLE_NUMBER';
+export const FETCH_TABLES_SUCCESSFUL = 'FETCH_TABLES_SUCCESSFUL';
 
 export const addNewScore = newData => ({
   type: ADD_NEW_SCORE,
@@ -84,4 +85,10 @@ export const selectGameNumber = (selectGameNumber) => ({
 export const setTableNumber = (tableNumber) => ({
   type: SET_TABLE_NUMBER,
   tableNumber
+});
+
+export const fetchTablesSuccessful = (playersData, tablesData) => ({
+  type: FETCH_TABLES_SUCCESSFUL,
+  playersData,
+  tablesData
 });

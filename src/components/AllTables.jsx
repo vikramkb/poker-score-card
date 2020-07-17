@@ -6,9 +6,23 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import {makeStyles} from "@material-ui/core/styles";
+import {fetchTablesSuccessful} from '../action/ScoreAction';
+import config from "./configuration";
+import axios from 'axios';
+
 import AllTableScore from "./AllTableScore.jsx";
 
 export class AllTables extends React.Component {
+    componentDidMount() {
+        axios.get(`${config[config.env].apiBasePath}/players`)
+            .then(playerResult => {
+                axios.get(`${config[config.env].apiBasePath}/full-tables`)
+                    .then(tableResult => {
+                        this.props.dispatch(fetchTablesSuccessful(playerResult.data, tableResult.data));
+                    });
+            })
+    }
+
     render() {
         const score = this.props.score;
         if(!score.tables || score.tables.length === 0){
