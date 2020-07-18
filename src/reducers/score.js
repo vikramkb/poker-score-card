@@ -31,6 +31,8 @@ function getUpdatedScore(game, totalScore) {
         r.get("playerStatus").filter(p => p.get("action") === 'playing').forEach(p => {
             if(!newTotalScore.get(p.get('name'))){
                 newTotalScore = newTotalScore.set(p.get('name'), 0);
+            }
+            if(!newScoreCard.get(p.get('name'))){
                 newScoreCard = newScoreCard.set(p.get('name'), 0);
             }
             newTotalScore = newTotalScore.set(p.get('name'), newTotalScore.get(p.get('name'))- r.get('bet'));
@@ -266,13 +268,9 @@ export default function score(state = defaultState, action = {}) {
             return state.set("tables", getTables(state).push(newTable));
         }
         case SELECT_SCORE_CARD: {
-            const newTables = state.tables.map(t => t);
-            newTables[action.tableNumber].pageNumber = action.pageNumber;
-            return {
-                names: state.names,
-                nameIdxMap: state.nameIdxMap,
-                tables: newTables
-            };
+            const updatedTable = getTable(state, action.tableNumber).set("pageNumber", action.pageNumber)
+            return  state.set("tables", getTables(state)
+                .set(action.tableNumber, updatedTable));
         }
         case SELECT_GAME_NUMBER: {
             const updatedTable = getTable(state, action.tableNumber).set("selectedGameNumber", action.selectedGameNumber);
