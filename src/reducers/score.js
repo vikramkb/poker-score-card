@@ -208,7 +208,6 @@ function submitWinner(state, action) {
     let table = getTable(state,tableNumber);
     const score = getUpdatedScore(updatedGame, table.get("totalScore"));
     const updatedTable = table
-                            .set("running", false)
                             .set("totalScore", score.get("newTotalScore"))
                             .set("gameScores", table.get("gameScores").push(score.get("newScoreCard")));
     const newState =  state.set("tables", getTables(state)

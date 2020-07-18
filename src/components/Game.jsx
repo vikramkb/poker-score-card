@@ -70,7 +70,14 @@ export default function Game(props) {
 
 
     function handleWinnerSubmit() {
-        dispatch(submitWinner(tableNumber, gameNumber, finalWinner));
+        axios.post(`${config[config.env].apiBasePath}/table/game/status`, {
+            "tableId": tableId,
+            "gameId": gameId,
+            "isRunning": false
+        }).then(result => {
+            dispatch(submitWinner(tableNumber, gameNumber, finalWinner));
+        });
+
     }
 
     function finalRoundPlayer(gameNumber, players) {
@@ -171,7 +178,13 @@ export default function Game(props) {
                 {
                     props.tableRunning ?
                         <Button variant="contained" color="primary" onClick={() => {
-                            props.dispatch(endTable(props.tableNumber))
+                            axios.post(`${config[config.env].apiBasePath}/table/status`, {
+                                "tableId": tableId,
+                                "isRunning": false
+                            }).then(result => {
+                                props.dispatch(endTable(props.tableNumber))
+                            });
+
                         }}>
                             Close Table
                         </Button>
