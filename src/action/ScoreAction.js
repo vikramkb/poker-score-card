@@ -94,9 +94,10 @@ export const selectScoreCard = (tableNumber, pageNumber) => ({
   pageNumber
 });
 
-export const selectGameNumber = (selectGameNumber) => ({
+export const selectGameNumber = (tableNumber, selectedGameNumber) => ({
   type: SELECT_GAME_NUMBER,
-  selectGameNumber
+  tableNumber,
+  selectedGameNumber
 });
 
 export const setTableNumber = (tableNumber) => ({

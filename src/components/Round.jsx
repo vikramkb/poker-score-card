@@ -59,7 +59,7 @@ export default function Round(props) {
                         onChange={handleChange}
                         color="primary"
                         name={player}
-                        disabled={fixed}
+                        disabled={fixed || props.isTableClosed}
                         inputProps={{'aria-label': 'primary checkbox'}}
                         />
                         |
@@ -106,7 +106,7 @@ export default function Round(props) {
                     </CardContent>
                     <CardActions>
                         {
-                            round.get("fixed") === false ? <Button variant="contained" color="primary" onClick={hanldeFixBet}>
+                            round.get("fixed") === false ? <Button variant="contained" color="primary" onClick={hanldeFixBet} disabled={props.isTableClosed}>
                                 Fix Bet
                             </Button> : ''
                         }

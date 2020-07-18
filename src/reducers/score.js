@@ -50,7 +50,7 @@ function getNewTable(players, nameIdxMap, tableId, gameId, roundId) {
         running: true,
         players: List(players),
         nameIdxMap: Map(nameIdxMap),
-        selectGameNumber: 1,
+        selectedGameNumber: 1,
         tableId
     });
 }
@@ -93,14 +93,23 @@ function getNewGame(players, gameId, roundId) {
 }
 
 function getUpdatedPlayerStatus(state, action, foldOrPlaying) {
-    const table = state.tables.get(action.tableNumber);
-    const games = table.get("games");
-    const game = games.get(action.gameNumber);
-    const rounds = game.get("rounds");
-    const round = rounds.get(action.roundNumber);
-    const playerStatus = round.get("playerStatus");
-    const player = playerStatus.get("action.playerIdx");
-    return state.set("tables", state.tables.set(action.tableNumber, table.set("games", games.set(action.gameNumber, game.set("rounds", rounds.set(action.roundNumber, round.set("playerStatus", playerStatus.set(action.playerIdx, player.set("action", foldOrPlaying)))))))));
+    const tableNumber = action.tableNumber;
+    const gameNumber = action.gameNumber;
+    const roundNumber = action.roundNumber;
+    const playerIdx = action.playerIdx;
+    const newRound = getRound(state, tableNumber, gameNumber, roundNumber).set("playerStatus",
+        getPlayerStatuses(state, tableNumber, gameNumber, roundNumber)
+            .set(playerIdx,
+                getPlayer(state, tableNumber, gameNumber, roundNumber, playerIdx).set("action", foldOrPlaying)));
+
+    let newState = state.set("tables", getTables(state)
+        .set(tableNumber,
+            getTable(state, tableNumber).set("games", getGames(state, tableNumber).set(gameNumber,
+                getGame(state, tableNumber, gameNumber)
+                    .set("rounds", getRounds(state, tableNumber, gameNumber)
+                        .set(roundNumber, newRound)
+                    )))));
+    return newState;
 }
 
 function getTable(state, tableNumber) {
@@ -178,7 +187,7 @@ function getUpdatedRoundStatus(state, action) {
                     )))));
 
     let rounds = getRounds(newState, tableNumber, gameNumber);
-    if(rounds.size !== 3) {
+    if(playingPlayers.size !== 1 && rounds.size !== 3) {
         return creatAndAddNewRound(newState, tableNumber, gameNumber);
     }
     return newState;
@@ -213,27 +222,20 @@ export default function score(state = defaultState, action = {}) {
             const tableNumber = action.tableNumber;
             const table = getTable(state, tableNumber);
             const newGame = getNewGame(table.get("players"));
-            const updatedTable = getTable(state, tableNumber).set("selectedGameNumber", getGames(state, tableNumber).size)
-            return state.set("tables", getTables(state)
+            // const updatedTable = getTable(state, tableNumber).set("selectedGameNumber", getGames(state, tableNumber).size)
+            const newState = state.set("tables", getTables(state)
                 .set(tableNumber,
-                    updatedTable.set("games", getGames(state, tableNumber).push(newGame))));
+                    getTable(state, tableNumber).set("games", getGames(state, tableNumber).push(newGame))));
+            return state.set("tables", getTables(newState)
+                .set(tableNumber, getTable(newState, tableNumber).set("selectedGameNumber", getGames(newState, tableNumber).size)));
         }
         case ADD_NEW_ROUND: {
         }
         case END_TABLE: {
-            // const newTables = state.tables.map(t => t);
-            // const table = state.tables[action.tableNumber];
-            // newTables[action.tableNumber] = {
-            //     ...table,
-            //     games: table.games.filter(g => !g.running),
-            //     scoreCard: table.scoreCard,
-            //     totalScore: table.totalScore,
-            //     running: false
-            // };
-            // return {
-            //     names,
-            //     tables: newTables
-            // };
+            const table = getTable(state, action.tableNumber)
+                .set("running", false).set("closed", true);
+            return state.set("tables", getTables(state)
+                .set(action.tableNumber, table));
         }
         case CREATE_NEW_TABLE: {
             const tableId = action.tableId;
@@ -257,10 +259,9 @@ export default function score(state = defaultState, action = {}) {
             };
         }
         case SELECT_GAME_NUMBER: {
-            return {
-                ...state,
-                selectGameNumber: action.selectGameNumber
-            }
+            const updatedTable = getTable(state, action.tableNumber).set("selectedGameNumber", action.selectedGameNumber);
+            return  state.set("tables", getTables(state)
+                .set(action.tableNumber, updatedTable));
         }
         case SET_TABLE_NUMBER: {
             return {

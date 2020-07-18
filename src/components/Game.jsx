@@ -103,7 +103,9 @@ export default function Game(props) {
         return <Round round={round} tableNumber={tableNumber} gameNumber={gameNumber} roundNumber={idx}
                       tableId={tableId}
                       gameId={gameId}
-                      dispatch={dispatch}/>
+                      dispatch={dispatch}
+                      isTableClosed={props.isTableClosed}
+        />
     }
 
     return (
@@ -126,7 +128,7 @@ export default function Game(props) {
                     rounds.map((r, idx) => roundDetails(idx, r))
                 }
                 {
-                    rounds.size === 3 && !winner && !running ?
+                    rounds.size === 3 && !winner && !running && !props.isTableClosed ?
                         <div>
                             <Typography className={classes.title} color="textPrimary">
                                 Choose Winner
@@ -141,7 +143,7 @@ export default function Game(props) {
             <CardActions>
                 <BasicPagination page={props.page} count={props.count} onChangeFn={props.onChangeFn}/>
                 {
-                    !running && winner ?
+                    !running && winner && !props.isTableClosed ?
                         <Button variant="contained" color="primary" onClick={() => {
                             props.dispatch(addNewGame(props.tableNumber))
                         }}>

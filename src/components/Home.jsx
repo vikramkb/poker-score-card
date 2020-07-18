@@ -34,6 +34,7 @@ export class Home extends React.Component {
         <div>
             <SimpleAppBar showAllTables={()=> {this.showAllTables(this.props.history)}} onCreateTableFn={() => this.props.history.push("/create-table")}/>
             <Game
+                isTableClosed = {table.get("closed")}
                 rounds = {r.get("rounds")}
                 winner = {r.get("winner")}
                 running = {r.get("running")}
@@ -45,8 +46,8 @@ export class Home extends React.Component {
                 dispatch={this.props.dispatch}
                 page={selectedGameNumber}
                 count={games.size}
-                onChangeFn={(gameNumber)=> {
-                this.props.dispatch(selectGameNumber(gameNumber))
+                onChangeFn={(selectedGameNumber)=> {
+                this.props.dispatch(selectGameNumber(tableNumber, selectedGameNumber))
             }}/>
             <ScoreTable
                 title="Table Total Score"
