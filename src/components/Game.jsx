@@ -16,7 +16,7 @@ import {
     selectGameNumber,
     setTableNumber,
     addNewGame,
-    addNewRound
+    addNewRound, createNewTable
 } from "../action/ScoreAction";
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -27,6 +27,8 @@ import AlertDialog from './AlertDialog.jsx';
 import Round from './Round.jsx';
 import Paper from "@material-ui/core/Paper";
 import BasicPagination from "./BasicPagination.jsx";
+import axios from "axios";
+import config from "./configuration";
 
 
 const useStyles = makeStyles({
@@ -56,6 +58,7 @@ const useStyles = makeStyles({
 export default function Game(props) {
     const rounds = props.rounds;
     const tableNumber = props.tableNumber;
+    const tablePlayers = props.tablePlayers;
     const tableId = props.tableId;
     const gameId = props.gameId;
     const gameNumber = props.gameNumber;
@@ -145,7 +148,22 @@ export default function Game(props) {
                 {
                     !running && winner && !props.isTableClosed ?
                         <Button variant="contained" color="primary" onClick={() => {
-                            props.dispatch(addNewGame(props.tableNumber))
+                            axios.post(`${config[config.env].apiBasePath}/table/game`, {
+                                "tableId": tableId,
+                                "gameSequence": props.page+1,
+                                "isRunning": true
+                            }).then(gameResult => {
+                                // axios.post(`${config[config.env].apiBasePath}/table/game/round`, {
+                                //     "tableId": tableId,
+                                //     "gameId": gameResult.data,
+                                //     "roundSequence": 1,
+                                //     "playerNames": tablePlayers.toJS(),
+                                //     "bidAmount": 10
+                                // }).then(roundResult => {
+                                    props.dispatch(addNewGame(props.tableNumber, gameResult.data));
+                                // });
+
+                            });
                         }}>
                             Add New Game
                         </Button> : ''

@@ -69,9 +69,11 @@ export const endTable = (tableNumber) => ({
   tableNumber
 });
 
-export const addNewGame = (tableNumber) => ({
+export const addNewGame = (tableNumber, gameId, roundId) => ({
   type: ADD_NEW_GAME,
-  tableNumber
+  tableNumber,
+  gameId,
+  roundId
 });
 
 export const addNewRound = (tableNumber, gameNumber) => ({

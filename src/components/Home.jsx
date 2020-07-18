@@ -37,6 +37,7 @@ export class Home extends React.Component {
                 isTableClosed = {table.get("closed")}
                 rounds = {r.get("rounds")}
                 winner = {r.get("winner")}
+                tablePlayers = {table.get("players")}
                 running = {r.get("running")}
                 tableRunning = {table.get("running")}
                 tableNumber={tableNumber}

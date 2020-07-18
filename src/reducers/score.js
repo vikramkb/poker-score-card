@@ -235,7 +235,9 @@ export default function score(state = defaultState, action = {}) {
         case ADD_NEW_GAME: {
             const tableNumber = action.tableNumber;
             const table = getTable(state, tableNumber);
-            const newGame = getNewGame(table.get("players"));
+            const gameId = action.gameId;
+            const roundId = action.roundId;
+            const newGame = getNewGame(table.get("players"), gameId, roundId);
             // const updatedTable = getTable(state, tableNumber).set("selectedGameNumber", getGames(state, tableNumber).size)
             const newState = state.set("tables", getTables(state)
                 .set(tableNumber,
