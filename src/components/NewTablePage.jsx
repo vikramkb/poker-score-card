@@ -16,7 +16,7 @@ export class NewTablePage extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    names: state.score.names
+    names: state.score.get("names")
 });
 
 export default connect(mapStateToProps)(NewTablePage);

@@ -12,36 +12,39 @@ export class Home extends React.Component {
         history.push("all-tables");
   }
   render() {
-       console.log("Home", this.props);
+       console.log("Home", this.props.score.toJS());
       const score = this.props.score;
-      if(!score.tables || score.tables.length === 0){
+      if(!score.get("tables") || score.get("tables").size === 0){
           return (<SimpleAppBar showAllTables={()=> {this.showAllTables(this.props.history)}} onCreateTableFn={() => this.props.history.push("/create-table")}/>);
       }
-      const tables = score.tables;
-      const tableNumber = score.tables.length-1;
-      const table = tables[tableNumber];
-      const scoreCard = table.scoreCard;
-      const totalScore = table.totalScore;
-      const nameIdxMap = score.nameIdxMap;
-      const games = table.games;
-      const names = table.players;
-      const pageNumber = table.pageNumber;
-      const selectedGameNumber = score.selectGameNumber ? score.selectGameNumber : 1;
+      const tables = score.get("tables");
+      const tableNumber = score.get("tables").size-1;
+      const table = tables.get(tableNumber);
+      const tableId = table.get("tableId");
+      const scoreCard = table.get("scoreCard");
+      const totalScore = table.get("totalScore");
+      const nameIdxMap = score.get("nameIdxMap");
+      const games = table.get("games");
+      const names = table.get("players");
+      const pageNumber = table.get("pageNumber");
+      const selectedGameNumber = table.get("selectedGameNumber") ? table.get("selectedGameNumber") : 1;
 
-    const r = games[selectedGameNumber-1];
+    const r = games.get(selectedGameNumber-1);
     return (
         <div>
             <SimpleAppBar showAllTables={()=> {this.showAllTables(this.props.history)}} onCreateTableFn={() => this.props.history.push("/create-table")}/>
             <Game
-                rounds = {r.rounds}
-                winner = {r.winner}
-                running = {r.running}
-                tableRunning = {table.running}
+                rounds = {r.get("rounds")}
+                winner = {r.get("winner")}
+                running = {r.get("running")}
+                tableRunning = {table.get("running")}
                 tableNumber={tableNumber}
+                tableId={tableId}
+                gameId={r.get("gameId")}
                 gameNumber = {selectedGameNumber-1}
                 dispatch={this.props.dispatch}
                 page={selectedGameNumber}
-                count={games.length}
+                count={games.size}
                 onChangeFn={(gameNumber)=> {
                 this.props.dispatch(selectGameNumber(gameNumber))
             }}/>

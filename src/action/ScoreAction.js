@@ -11,6 +11,8 @@ export const SELECT_SCORE_CARD = 'SELECT_SCORE_CARD';
 export const SELECT_GAME_NUMBER = 'SELECT_GAME_NUMBER';
 export const SET_TABLE_NUMBER = 'SET_TABLE_NUMBER';
 export const FETCH_TABLES_SUCCESSFUL = 'FETCH_TABLES_SUCCESSFUL';
+export const ADD_NEW_GAME = 'ADD_NEW_GAME';
+export const ADD_NEW_ROUND = 'ADD_NEW_ROUND';
 
 export const addNewScore = newData => ({
   type: ADD_NEW_SCORE,
@@ -37,12 +39,13 @@ export const foldRound = (tableNumber, gameNumber, roundNumber, playerIdx, playe
   playerIdx
 });
 
-export const fixBet = (tableNumber, gameNumber, roundNumber, bet) => ({
+export const fixBet = (tableNumber, gameNumber, roundNumber, bet, nextGameId) => ({
   type: FIX_BET,
   tableNumber,
   gameNumber,
   roundNumber,
-  bet
+  bet,
+  nextGameId
 });
 
 export const playRound = (tableNumber, gameNumber, roundNumber, playerIdx, playerName) => ({
@@ -66,8 +69,22 @@ export const endTable = (tableNumber) => ({
   tableNumber
 });
 
-export const createNewTable = (players) => ({
+export const addNewGame = (tableNumber) => ({
+  type: ADD_NEW_GAME,
+  tableNumber
+});
+
+export const addNewRound = (tableNumber, gameNumber) => ({
+  type: ADD_NEW_ROUND,
+  tableNumber,
+  gameNumber
+});
+
+export const createNewTable = (tableId, gameId, roundId, players) => ({
   type: CREATE_NEW_TABLE,
+  tableId,
+  gameId,
+  roundId,
   players
 });
 

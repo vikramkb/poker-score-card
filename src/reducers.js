@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import score from "./reducers/score";
+import score2 from "./reducers/score";
 
 const appStore = combineReducers({
-    score: score
+    score: score2
 });
 
 export default appStore;

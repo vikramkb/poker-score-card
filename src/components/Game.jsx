@@ -7,7 +7,17 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Switch from '@material-ui/core/Switch';
-import {playRound, foldRound, fixBet, endTable, submitWinner, selectGameNumber, setTableNumber} from "../action/ScoreAction";
+import {
+    playRound,
+    foldRound,
+    fixBet,
+    endTable,
+    submitWinner,
+    selectGameNumber,
+    setTableNumber,
+    addNewGame,
+    addNewRound
+} from "../action/ScoreAction";
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -46,6 +56,8 @@ const useStyles = makeStyles({
 export default function Game(props) {
     const rounds = props.rounds;
     const tableNumber = props.tableNumber;
+    const tableId = props.tableId;
+    const gameId = props.gameId;
     const gameNumber = props.gameNumber;
     const dispatch = props.dispatch;
     const winner = props.winner;
@@ -72,10 +84,12 @@ export default function Game(props) {
                     {
                         players.map(p => {
                             return (<FormControlLabel
-                                value={p.name}
-                                control={<Radio color="primary" value={p.name} name={p.name} onChange={handleChange}/>}
-                                label={<Typography variant="h6" component="h6" display="inline">{p.name}</Typography>}
-                                key={p.name}
+                                value={p.get("name")}
+                                control={<Radio color="primary" value={p.get("name")} name={p.get("name")}
+                                                onChange={handleChange}/>}
+                                label={<Typography variant="h6" component="h6"
+                                                   display="inline">{p.get("name")}</Typography>}
+                                key={p.get("name")}
                                 labelPlacement="start"
                             />)
                         })
@@ -87,6 +101,8 @@ export default function Game(props) {
 
     function roundDetails(idx, round) {
         return <Round round={round} tableNumber={tableNumber} gameNumber={gameNumber} roundNumber={idx}
+                      tableId={tableId}
+                      gameId={gameId}
                       dispatch={dispatch}/>
     }
 
@@ -110,12 +126,12 @@ export default function Game(props) {
                     rounds.map((r, idx) => roundDetails(idx, r))
                 }
                 {
-                    rounds.length === 3 && !winner && !running ?
+                    rounds.size === 3 && !winner && !running ?
                         <div>
                             <Typography className={classes.title} color="textPrimary">
                                 Choose Winner
                             </Typography>
-                            {finalRoundPlayer(gameNumber, rounds[2].playerStatus.filter(p => p.action === 'playing'))}
+                            {finalRoundPlayer(gameNumber, rounds.get(2).get("playerStatus").filter(p => p.get("action") === 'playing'))}
                             <AlertDialog disableButton={!finalWinner} submitFn={handleWinnerSubmit}
                                          title={`Submit Winner : ${finalWinner}`}/>
                         </div>
@@ -125,12 +141,20 @@ export default function Game(props) {
             <CardActions>
                 <BasicPagination page={props.page} count={props.count} onChangeFn={props.onChangeFn}/>
                 {
+                    !running && winner ?
+                        <Button variant="contained" color="primary" onClick={() => {
+                            props.dispatch(addNewGame(props.tableNumber))
+                        }}>
+                            Add New Game
+                        </Button> : ''
+                }
+                {
                     props.tableRunning ?
-                    <Button variant="contained" color="primary" onClick={() => {
-                        props.dispatch(endTable(props.tableNumber))
-                    }}>
-                        Close Table
-                    </Button>
+                        <Button variant="contained" color="primary" onClick={() => {
+                            props.dispatch(endTable(props.tableNumber))
+                        }}>
+                            Close Table
+                        </Button>
                         : ''
                 }
             </CardActions>

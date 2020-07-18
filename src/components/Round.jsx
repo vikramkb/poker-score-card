@@ -12,6 +12,8 @@ import CardActions from "@material-ui/core/CardActions";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import axios from "axios";
+import config from "./configuration";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -26,11 +28,13 @@ const useStyles = makeStyles((theme) => ({
 export default function Round(props) {
     const classes = useStyles();
     const round = props.round;
+    const tableId=props.tableId;
+    const gameId=props.gameId;
     const tableNumber = props.tableNumber;
     const roundNumber = props.roundNumber;
     const gameNumber = props.gameNumber;
     const dispatch = props.dispatch;
-    const [bet, setBet] = React.useState(props.round.bet);
+    const [bet, setBet] = React.useState(props.round.get("bet"));
 
 
     function player(playerIdx, roundNumber, player, fixed) {
@@ -47,11 +51,11 @@ export default function Round(props) {
                 control={
                     <span>
                         <Typography variant="h6" component="h6" display="inline">
-                            {player.name}
+                            {player.get("name")}
                         </Typography>
 
                         <Switch
-                        checked={player.action === 'playing'}
+                        checked={player.get("action") === 'playing'}
                         onChange={handleChange}
                         color="primary"
                         name={player}
@@ -68,7 +72,15 @@ export default function Round(props) {
     }
 
     function hanldeFixBet() {
-        dispatch(fixBet(tableNumber, gameNumber, roundNumber, bet));
+        axios.post(`${config[config.env].apiBasePath}/table/game/round`, {
+            "tableId": tableId,
+            "gameId": gameId,
+            "roundSequence": roundNumber+1,
+            "playerNames": round.get("playerStatus").filter(p => p.get("action") === 'playing').map(p => p.get("name")),
+            "bidAmount": bet
+        }).then(result => {
+            dispatch(fixBet(tableNumber, gameNumber, roundNumber, bet));
+        });
     }
     return (
         <div className="round">
@@ -79,8 +91,8 @@ export default function Round(props) {
                     </Typography>
 
                     <CardContent>
-                        <TextField id="outlined-basic" label="Bet" variant="outlined" disabled={round.fixed}
-                                   defaultValue={round.bet} onChange={(event)=>setBet(parseInt(event.target.value, 10))} type="number"/>
+                        <TextField id="outlined-basic" label="Bet" variant="outlined" disabled={round.get("fixed")}
+                                   defaultValue={round.get("bet")} onChange={(event)=>setBet(parseInt(event.target.value, 10))} type="number"/>
                         {/*<Typography variant="h6" component="h6">*/}
                         {/*    Players*/}
                         {/*</Typography>*/}
@@ -88,13 +100,13 @@ export default function Round(props) {
                         <br></br>
                         {
                             <FormGroup row>
-                                {round.playerStatus.map((p, idx) => player(idx, roundNumber, p, round.fixed))}
+                                {round.get("playerStatus").map((p, idx) => player(idx, roundNumber, p, round.get("fixed")))}
                             </FormGroup>
                         }
                     </CardContent>
                     <CardActions>
                         {
-                            round.fixed === false ? <Button variant="contained" color="primary" onClick={hanldeFixBet}>
+                            round.get("fixed") === false ? <Button variant="contained" color="primary" onClick={hanldeFixBet}>
                                 Fix Bet
                             </Button> : ''
                         }
