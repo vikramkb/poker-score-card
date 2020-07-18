@@ -196,6 +196,11 @@ function getUpdatedRoundStatus(state, action) {
     if(playingPlayers.size !== 1 && rounds.size !== 3) {
         return creatAndAddNewRound(newState, tableNumber, gameNumber);
     }
+    if (playingPlayers.size === 1) {
+        action.winner = playingPlayers.get(0).get("name");
+        return submitWinner(newState,action);
+    }
+
     return newState;
 }
 
