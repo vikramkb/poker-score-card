@@ -24,29 +24,33 @@ const defaultState = Map({
     tables
 });
 
-function getUpdatedScore(game, totalScore, nameIdxMap) {
-    const newTotalScore = totalScore.map(t => t);
-    const newScoreCard = totalScore.map(t => 0);
-    const tableAmount = game.rounds.map(r => {
-        r.playerStatus.filter(p => p.action === 'playing').forEach(p => {
-            newTotalScore[nameIdxMap[p.name]] = newTotalScore[nameIdxMap[p.name]] - r.bet;
-            newScoreCard[nameIdxMap[p.name]] = newScoreCard[nameIdxMap[p.name]] - r.bet;
+function getUpdatedScore(game, totalScore) {
+    let newTotalScore = totalScore;
+    let newScoreCard = Map();
+    const tableAmount = game.get("rounds").map(r => {
+        r.get("playerStatus").filter(p => p.get("action") === 'playing').forEach(p => {
+            if(!newTotalScore.get(p.get('name'))){
+                newTotalScore = newTotalScore.set(p.get('name'), 0);
+                newScoreCard = newScoreCard.set(p.get('name'), 0);
+            }
+            newTotalScore = newTotalScore.set(p.get('name'), newTotalScore.get(p.get('name'))- r.get('bet'));
+            newScoreCard = newScoreCard.set(p.get('name'), newScoreCard.get(p.get('name')) - r.get('bet'));
         });
-        return r.playerStatus.filter(p => p.action === 'playing').length * r.bet
+        return r.get("playerStatus").filter(p => p.get("action") === 'playing').size * r.get("bet");
     }).reduce((accumulator, currentValue) => accumulator + currentValue);
-    newTotalScore[nameIdxMap[game.winner]] += tableAmount;
-    newScoreCard[nameIdxMap[game.winner]] += tableAmount;
-    return {
+    newTotalScore = newTotalScore.set(game.get("winner"), newTotalScore.get(game.get("winner")) + tableAmount);
+    newScoreCard = newScoreCard.set(game.get("winner"), newScoreCard.get(game.get("winner")) + tableAmount);
+    return Map({
         newTotalScore,
         newScoreCard
-    };
+    });
 }
 
 function getNewTable(players, nameIdxMap, tableId, gameId, roundId) {
     return Map({
         games: List([getNewGame(players, gameId, roundId)]),
-        scoreCard: List(),
-        totalScore: List(),
+        gameScores: List(),
+        totalScore: Map(),
         running: true,
         players: List(players),
         nameIdxMap: Map(nameIdxMap),
@@ -196,12 +200,22 @@ function getUpdatedRoundStatus(state, action) {
 function submitWinner(state, action) {
     let tableNumber = action.tableNumber;
     let gameNumber = action.gameNumber;
-    const updatedGame = getGame(state, tableNumber, gameNumber).set("winner", action.winner).set("running", false);
-    const updatedTable = getTable(state, tableNumber).set("running", false);
-    return  state.set("tables", getTables(state)
-        .set(tableNumber, updatedTable
-                .set("games", getGames(state, tableNumber)
-                    .set(gameNumber, updatedGame))));
+    const updatedGame = getGame(state, tableNumber, gameNumber)
+        .set("winner", action.winner)
+        .set("running", false);
+    let table = getTable(state,tableNumber);
+    const score = getUpdatedScore(updatedGame, table.get("totalScore"));
+    const updatedTable = table
+                            .set("running", false)
+                            .set("totalScore", score.get("newTotalScore"))
+                            .set("gameScores", table.get("gameScores").push(score.get("newScoreCard")));
+    const newState =  state.set("tables", getTables(state)
+        .set(tableNumber, updatedTable.set("games",
+            getGames(state, tableNumber).set(gameNumber,
+                updatedGame))));
+
+        console.log("Submit score : ", newState.toJS());
+    return newState;
 }
 
 export default function score(state = defaultState, action = {}) {

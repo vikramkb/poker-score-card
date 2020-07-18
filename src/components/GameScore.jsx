@@ -34,8 +34,8 @@ export default function ScoreTable(props) {
                 <Typography variant="h5" gutterBottom>
                     All Games Score Table
                 </Typography>
-                {props.scoreCard.size > 0 ? <SimpleTable names={props.names}
-                                                           values={props.scoreCard.get(props.pageNumber && props.pageNumber - 1 >= 0 ? props.pageNumber - 1 : 0)}
+                {props.gameScores.size > 0 ? <SimpleTable names={props.names}
+                                                           values={props.gameScores.get(props.pageNumber && props.pageNumber - 1 >= 0 ? props.pageNumber - 1 : 0)}
                                                            count={props.games.filter(g => !g.running).length} onChangeFn={(pageNumber) => {
 
                     props.dispatch(selectScoreCard(props.tableNumber, pageNumber))

@@ -21,7 +21,7 @@ export class Home extends React.Component {
       const tableNumber = score.get("tables").size-1;
       const table = tables.get(tableNumber);
       const tableId = table.get("tableId");
-      const scoreCard = table.get("scoreCard");
+      const gameScores = table.get("gameScores");
       const totalScore = table.get("totalScore");
       const nameIdxMap = score.get("nameIdxMap");
       const games = table.get("games");
@@ -53,7 +53,7 @@ export class Home extends React.Component {
                 title="Table Total Score"
                 names={names}
                 totalScore={totalScore}
-                scoreCard={scoreCard}
+                scoreCard={gameScores}
                 pageNumber={pageNumber}
                 games={games}
                 dispatch={this.props.dispatch}
@@ -63,7 +63,7 @@ export class Home extends React.Component {
                 title="Table Total Score"
                 names={names}
                 totalScore={totalScore}
-                scoreCard={scoreCard}
+                gameScores={gameScores}
                 pageNumber={pageNumber}
                 games={games}
                 dispatch={this.props.dispatch}
