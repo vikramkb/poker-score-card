@@ -33,7 +33,7 @@ export default function Players(props) {
     function createTable() {
         axios.post(`${config[config.env].apiBasePath}/table`, {
             "tableName": "test table",
-            "createdPlayerName": "vikram1",
+            "createdPlayerName": "vikram",
             "isRunning": true
         }).then(tableResult => {
             const players = Object.keys(state).filter(idx => state[idx]);
