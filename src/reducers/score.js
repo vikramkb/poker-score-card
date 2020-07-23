@@ -310,7 +310,7 @@ export default function score(state = defaultState, action = {}) {
             return state.set("tables", getTables(state).push(newTable));
         }
         case SELECT_SCORE_CARD: {
-            const updatedTable = getTable(state, action.tableNumber).set("pageNumber", action.pageNumber)
+            const updatedTable = getTable(state, action.tableNumber).set("pageNumber", action.pageNumber);
             return state.set("tables", getTables(state)
                 .set(action.tableNumber, updatedTable));
         }

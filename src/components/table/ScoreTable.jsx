@@ -29,7 +29,7 @@ const useStyles = makeStyles({
 
 export default function ScoreTable(props) {
     const classes = useStyles();
-    console.log(props.names.toJS());
+    console.log("ScoreTable props", props);
     return (
         <Card className={classes.root} variant="root">
             <CardContent>
@@ -45,7 +45,7 @@ export default function ScoreTable(props) {
                 <Typography variant="h5" gutterBottom display={"inline"}>
                     {props.isCompleted ? `Is Game Completed? : ${props.isCompleted}` : ''}
                 </Typography>
-                <SimpleTable names={props.names.toJS()} values={props.totalScore.toJS()}/>
+                <SimpleTable names={props.names} values={props.totalScore}/>
             </CardContent>
             <CardActions>
                 {

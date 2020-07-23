@@ -42,8 +42,8 @@ export default function AllTableScore(props) {
                             isRealGame={table.get("realGame")}
                             isCompleted={table.get("isRunning")}
                             tableName={table.get("tableName")}
-                            names={players}
-                            totalScore={scores}
+                            names={players.toJS()}
+                            totalScore={scores.toJS()}
                             dispatch={props.dispatch}
                             history={props.history}
                             tableNumber={idx+1}
