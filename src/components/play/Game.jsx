@@ -154,7 +154,7 @@ export default function Game(props) {
             <CardActions>
                 <BasicPagination page={props.page} count={props.count} onChangeFn={props.onChangeFn}/>
                 {
-                    !running && winner && !props.isTableClosed ?
+                    !props.isTableClosed ?
                         <Button variant="contained" color="primary" onClick={() => {
                             axios.post(`${config[config.env].apiBasePath}/table/game`, {
                                 "tableId": tableId,

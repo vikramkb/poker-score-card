@@ -422,15 +422,28 @@ export default function score(state = defaultState, action = {}) {
             fullTableData.players.players.forEach((name, idx) => {
                 nameIndexMap[name] = idx;
             });
+            let totalScore = Map();
+            fullTableData.tableTotalScore.playerNames.forEach((p, idx) => {
+                totalScore = totalScore.set(p, fullTableData.tableTotalScore.scores[idx]);
+            });
+
+            let gameScores = fromJS(fullTableData.gamesScore.map(g => {
+                let totalScore = Map();
+                g.playerNames.forEach((p, idx) => {
+                    totalScore = totalScore.set(p, g.scores[idx]);
+                });
+                return totalScore;
+            }));
+
             const table = Map({
                 games: fromJS(games),
-                gameScores: List(),
-                totalScore: Map(),
+                gameScores: gameScores,
+                totalScore,
                 running: fullTableData.table.isRunning,
                 players: List(fullTableData.players.players),
                 nameIdxMap: Map(nameIndexMap),
                 selectedGameNumber: games.length - 1,
-                tableId
+                tableId: fullTableData.table.tableId
             });
 
             console.log("new table", table.toJS());
