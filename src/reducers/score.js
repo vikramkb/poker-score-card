@@ -17,15 +17,14 @@ import axios from 'axios';
 import config from "../components/common/configuration";
 
 
-const {Map, List} = require('immutable');
+const {Map, List, fromJS} = require('immutable');
 
 
-const names = List();
 const firstRoundBet = 10;
-const tables = List();
 const defaultState = Map({
-    names,
-    tables
+    names: List(),
+    tables: List(),
+    allTables: List()
 });
 
 function getUpdatedScore(game, totalScore) {
@@ -328,7 +327,9 @@ export default function score(state = defaultState, action = {}) {
         }
         case FETCH_TABLES_SUCCESSFUL: {
             let tables = action.tablesData;
-            console.log("FETCH_TABLES_SUCCESSFUL", tables);
+            let allTables = state.set("allTables", fromJS(tables));
+            console.log("FETCH_TABLES_SUCCESSFUL", allTables.toJS());
+            return allTables;
             // tables.map(t => {
             //     const tableId = t.table.tableId;
             //     const gameId = t.games.length-1;

@@ -14,25 +14,24 @@ import AllTableScore from "./AllTableScore.jsx";
 
 export class AllTables extends React.Component {
     componentDidMount() {
-        axios.get(`${config[config.env].apiBasePath}/full-tables`)
+        axios.get(`${config[config.env].apiBasePath}/tables`)
         .then(tableResult => {
             this.props.dispatch(fetchTablesSuccessful(tableResult.data));
         });
     }
 
     render() {
-        const score = this.props.score;
-        if(!score.tables || score.tables.length === 0){
+        const allTables = this.props.allTables;
+        if(!allTables || allTables.length === 0){
             return (<SimpleAppBar showAllTables={()=> {this.props.history.push("/all-tables")}} onCreateTableFn={() => this.props.history.push("/create-table")}/>);
         }
-        const tables = score.tables;
+        console.log("AllTables all tables", allTables.toJS());
         // const tableNumber = score.tables.length-1;
         // const table = tables[tableNumber];
         // const scoreCard = table.scoreCard;
         // const totalScore = table.totalScore;
         // const nameIdxMap = score.nameIdxMap;
         // const games = table.games;
-        const names = score.names;
         // const pageNumber = table.pageNumber;
         // const selectGameNumber = score.selectGameNumber ? score.selectGameNumber : 1;
 
@@ -40,8 +39,8 @@ export class AllTables extends React.Component {
             <div>
                 <SimpleAppBar showAllTables={() => this.props.history.push("/all-tables")} onCreateTableFn={() => this.props.history.push("/create-table")}/>
                 <AllTableScore
-                    tables={tables}
-                    names={names}
+                    tables={allTables}
+                    // names={names}
                     dispatch={this.props.dispatch}
                     history={this.props.history}/>
             </div>
@@ -50,7 +49,8 @@ export class AllTables extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    score: state.score
+    allTables: state.score.get("allTables")
+
 });
 
 export default connect(mapStateToProps)(AllTables);

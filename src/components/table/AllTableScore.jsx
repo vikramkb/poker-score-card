@@ -32,11 +32,18 @@ export default function AllTableScore(props) {
         <Card className={classes.root} variant="outlined">
             <CardContent>
                 {
-                    props.tables.map((t,idx) => {
+                    props.tables.filter(t =>  t.get("tablePlayerTotalScore").get("playerNames").size > 0).map((t,idx) => {
+                        console.log("vikram", t.toJS());
+                        const players = t.get("tablePlayerTotalScore").get("playerNames");
+                        const scores = t.get("tablePlayerTotalScore").get("scores");
+                        const table = t.get("table");
                         return (<ScoreTable
                             title="Table Total Score"
-                            names={t.players}
-                            totalScore={t.totalScore}
+                            isRealGame={table.get("realGame")}
+                            isCompleted={table.get("isRunning")}
+                            tableName={table.get("tableName")}
+                            names={players}
+                            totalScore={scores}
                             dispatch={props.dispatch}
                             history={props.history}
                             tableNumber={idx+1}
