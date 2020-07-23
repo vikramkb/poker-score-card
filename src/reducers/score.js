@@ -3,7 +3,7 @@ import {
     ADD_NEW_ROUND,
     CREATE_NEW_TABLE,
     END_TABLE,
-    FETCH_TABLES_SUCCESSFUL,
+    FETCH_TABLES_SUCCESSFUL, fetchTablesSuccessful,
     FIX_BET,
     FOLD_ROUND,
     PLAY_ROUND,
@@ -12,6 +12,9 @@ import {
     SET_TABLE_NUMBER,
     SUBMIT_WINNER
 } from "../action/ScoreAction";
+import axios from 'axios';
+import config from "../components/configuration";
+
 
 const {Map, List} = require('immutable');
 
@@ -29,13 +32,13 @@ function getUpdatedScore(game, totalScore) {
     let newScoreCard = Map();
     const tableAmount = game.get("rounds").map(r => {
         r.get("playerStatus").filter(p => p.get("action") === 'playing').forEach(p => {
-            if(!newTotalScore.get(p.get('name'))){
+            if (!newTotalScore.get(p.get('name'))) {
                 newTotalScore = newTotalScore.set(p.get('name'), 0);
             }
-            if(!newScoreCard.get(p.get('name'))){
+            if (!newScoreCard.get(p.get('name'))) {
                 newScoreCard = newScoreCard.set(p.get('name'), 0);
             }
-            newTotalScore = newTotalScore.set(p.get('name'), newTotalScore.get(p.get('name'))- r.get('bet'));
+            newTotalScore = newTotalScore.set(p.get('name'), newTotalScore.get(p.get('name')) - r.get('bet'));
             newScoreCard = newScoreCard.set(p.get('name'), newScoreCard.get(p.get('name')) - r.get('bet'));
         });
         return r.get("playerStatus").filter(p => p.get("action") === 'playing').size * r.get("bet");
@@ -152,7 +155,7 @@ function getPlayer(state, tableNumber, gameNumber, roundNumber, playerNumber) {
 
 function creatAndAddNewRound(state, tableNumber, gameNumber) {
     const game = getGame(state, tableNumber, gameNumber);
-    const lastRoundNumber = game.get("rounds").size-1;
+    const lastRoundNumber = game.get("rounds").size - 1;
     const lastRound = game.get("rounds").get(lastRoundNumber);
     const playerStatuses = getPlayerStatuses(state, tableNumber, gameNumber, lastRoundNumber);
     const lastRoundPlayers = playerStatuses.filter(p => p.get("action") === "playing").map(p => p.get("name"));
@@ -193,12 +196,14 @@ function getUpdatedRoundStatus(state, action) {
                     )))));
 
     let rounds = getRounds(newState, tableNumber, gameNumber);
-    if(playingPlayers.size !== 1 && rounds.size !== 3) {
+    if (playingPlayers.size !== 1 && rounds.size !== 3) {
         return creatAndAddNewRound(newState, tableNumber, gameNumber);
     }
     if (playingPlayers.size === 1) {
         action.winner = playingPlayers.get(0).get("name");
-        return submitWinner(newState,action);
+        action.tableId = getTable(newState, tableNumber).get("tableId");
+        action.gameId = getGame(newState, tableNumber, gameNumber).get("gameId");
+        return submitWinner(newState, action);
     }
 
     return newState;
@@ -210,17 +215,50 @@ function submitWinner(state, action) {
     const updatedGame = getGame(state, tableNumber, gameNumber)
         .set("winner", action.winner)
         .set("running", false);
-    let table = getTable(state,tableNumber);
+    let table = getTable(state, tableNumber);
     const score = getUpdatedScore(updatedGame, table.get("totalScore"));
     const updatedTable = table
-                            .set("totalScore", score.get("newTotalScore"))
-                            .set("gameScores", table.get("gameScores").push(score.get("newScoreCard")));
-    const newState =  state.set("tables", getTables(state)
+        .set("totalScore", score.get("newTotalScore"))
+        .set("gameScores", table.get("gameScores").push(score.get("newScoreCard")));
+    const newState = state.set("tables", getTables(state)
         .set(tableNumber, updatedTable.set("games",
             getGames(state, tableNumber).set(gameNumber,
                 updatedGame))));
 
-        console.log("Submit score : ", newState.toJS());
+    let playerNames = [];
+    let scores = [];
+    Object.keys(score.get("newTotalScore").toJS()).forEach(playerName => {
+        playerNames.push(playerName);
+        scores.push(score.get("newTotalScore").get(playerName));
+    });
+    axios.post(`${config[config.env].apiBasePath}/table/game/scores`, {
+        "gameId": action.gameId,
+        "tableId": action.tableId,
+        "playerNames": playerNames,
+        "scores": scores
+    }).then(result => {
+        console.log("table game scores saving is successful in database")
+    }).catch(result => {
+        console.log("table game scores saving is failed in database")
+    });
+
+    playerNames = [];
+    scores = [];
+    Object.keys(score.get("newScoreCard").toJS()).forEach(playerName => {
+        playerNames.push(playerName);
+        scores.push(score.get("newScoreCard").get(playerName));
+    });
+    axios.post(`${config[config.env].apiBasePath}/table/player/scores`, {
+        "tableId": action.tableId,
+        "playerNames": playerNames,
+        "scores": scores
+    }).then(result => {
+        console.log("table total scores saving is successful in database")
+    }).catch(result => {
+        console.log("table total scores saving is failed in database")
+    });
+
+    console.log("Submit score : ", newState.toJS());
     return newState;
 }
 
@@ -273,12 +311,12 @@ export default function score(state = defaultState, action = {}) {
         }
         case SELECT_SCORE_CARD: {
             const updatedTable = getTable(state, action.tableNumber).set("pageNumber", action.pageNumber)
-            return  state.set("tables", getTables(state)
+            return state.set("tables", getTables(state)
                 .set(action.tableNumber, updatedTable));
         }
         case SELECT_GAME_NUMBER: {
             const updatedTable = getTable(state, action.tableNumber).set("selectedGameNumber", action.selectedGameNumber);
-            return  state.set("tables", getTables(state)
+            return state.set("tables", getTables(state)
                 .set(action.tableNumber, updatedTable));
         }
         case SET_TABLE_NUMBER: {

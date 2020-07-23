@@ -60,7 +60,8 @@ export default function Game(props) {
     const tableNumber = props.tableNumber;
     const tablePlayers = props.tablePlayers;
     const tableId = props.tableId;
-    const gameId = props.gameId;
+    const
+        gameId = props.gameId;
     const gameNumber = props.gameNumber;
     const dispatch = props.dispatch;
     const winner = props.winner;
@@ -75,7 +76,7 @@ export default function Game(props) {
             "gameId": gameId,
             "isRunning": false
         }).then(result => {
-            dispatch(submitWinner(tableNumber, gameNumber, finalWinner));
+            dispatch(submitWinner(tableNumber, gameNumber, finalWinner, tableId, gameId));
         });
 
     }

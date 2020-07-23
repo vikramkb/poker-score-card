@@ -57,11 +57,13 @@ export const playRound = (tableNumber, gameNumber, roundNumber, playerIdx, playe
   playerIdx
 });
 
-export const submitWinner = (tableNumber, gameNumber, winner) => ({
+export const submitWinner = (tableNumber, gameNumber, winner, tableId, gameId) => ({
   type: SUBMIT_WINNER,
   tableNumber,
   gameNumber,
-  winner
+  winner,
+  tableId,
+  gameId
 });
 
 export const endTable = (tableNumber) => ({
