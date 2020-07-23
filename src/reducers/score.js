@@ -221,7 +221,8 @@ function submitWinner(state, action) {
     const score = getUpdatedScore(updatedGame, table.get("totalScore"));
     const updatedTable = table
         .set("totalScore", score.get("newTotalScore"))
-        .set("gameScores", table.get("gameScores").push(score.get("newScoreCard")));
+        .set("gameScores", table.get("gameScores").push(score.get("newScoreCard")))
+        .set("pageNumber", table.get("gameScores").size+1);
     const newState = state.set("tables", getTables(state)
         .set(tableNumber, updatedTable.set("games",
             getGames(state, tableNumber).set(gameNumber,
@@ -455,7 +456,7 @@ export default function score(state = defaultState, action = {}) {
                 nameIdxMap: Map(nameIndexMap),
                 selectedGameNumber: games.length,
                 tableId: fullTableData.table.tableId,
-                pageNumber: games.length
+                pageNumber: gameScores.size
             });
 
             console.log("new table", table.toJS());
