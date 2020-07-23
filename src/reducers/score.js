@@ -3,7 +3,8 @@ import {
     ADD_NEW_ROUND,
     CREATE_NEW_TABLE,
     END_TABLE,
-    FETCH_TABLES_SUCCESSFUL, fetchTablesSuccessful,
+    FETCH_PLAYERS_SUCCESSFUL,
+    FETCH_TABLES_SUCCESSFUL,
     FIX_BET,
     FOLD_ROUND,
     PLAY_ROUND,
@@ -13,13 +14,13 @@ import {
     SUBMIT_WINNER
 } from "../action/ScoreAction";
 import axios from 'axios';
-import config from "../components/configuration";
+import config from "../components/common/configuration";
 
 
 const {Map, List} = require('immutable');
 
 
-const names = List('Vikram', "Radhakrishna", "Sydulu", "Sharat", "Konda", "Swathi", "Madhan", "Thirapathi Rao", "Ramakrishna", "Ramakrishna Peddabbai", "Gopi", "Sydule Kukka", "Sydulu Thota");
+const names = List();
 const firstRoundBet = 10;
 const tables = List();
 const defaultState = Map({
@@ -229,7 +230,7 @@ function submitWinner(state, action) {
     let scores = [];
     Object.keys(score.get("newTotalScore").toJS()).forEach(playerName => {
         playerNames.push(playerName);
-        scores.push(score.get("newTotalScore").get(playerName));
+        scores.push(score.get("newScoreCard").get(playerName));
     });
     axios.post(`${config[config.env].apiBasePath}/table/game/scores`, {
         "gameId": action.gameId,
@@ -246,7 +247,7 @@ function submitWinner(state, action) {
     scores = [];
     Object.keys(score.get("newScoreCard").toJS()).forEach(playerName => {
         playerNames.push(playerName);
-        scores.push(score.get("newScoreCard").get(playerName));
+        scores.push(score.get("newTotalScore").get(playerName));
     });
     axios.post(`${config[config.env].apiBasePath}/table/player/scores`, {
         "tableId": action.tableId,
@@ -326,7 +327,24 @@ export default function score(state = defaultState, action = {}) {
             }
         }
         case FETCH_TABLES_SUCCESSFUL: {
-            const players = List(action.playersData.map(p => p.playerName));
+            let tables = action.tablesData;
+            console.log("FETCH_TABLES_SUCCESSFUL", tables);
+            // tables.map(t => {
+            //     const tableId = t.table.tableId;
+            //     const gameId = t.games.length-1;
+            //     const roundId =
+            //
+            // });
+            //
+            // const roundId = action.roundId;
+            // const players = Object.keys(action.players).filter(idx => action.players[idx]);
+            // const nameIdxMap = {};
+            // Object.keys(action.players).forEach((p, idx) => {
+            //     nameIdxMap[p] = idx
+            // });
+            // const newTable = getNewTable(players, nameIdxMap, tableId, gameId, roundId);
+
+
             // const tables = action.tablesData
             //     .filter(t => t.players && t.players.players && t.players.players.length > 0)
             //     .filter(t => t.tableTotalScore && t.tableTotalScore.playerNames && t.tableTotalScore.playerNames.length > 0)
@@ -366,11 +384,15 @@ export default function score(state = defaultState, action = {}) {
             //     });
             // console.log(tables);
             return Map({
-                names: players,
+                // names: players,
                 // selectGameNumber: 1,
-                pageNumber: 1,
+                // pageNumber: 1,
                 tables: List()
             });
+        }
+        case FETCH_PLAYERS_SUCCESSFUL: {
+            const players = List(action.playersData.map(p => p.playerName));
+            return state.set("names", players);
         }
         default:
             return state;

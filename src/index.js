@@ -2,14 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import './index.css';
-import Home from './components/Home.jsx';
-import AllTables from './components/AllTables.jsx';
+import Home from './components/play/Home.jsx';
+import AllTables from './components/table/AllTables.jsx';
 import * as serviceWorker from './serviceWorker';
 import { applyMiddleware, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import appStore from './reducers';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import NewTablePage from "./components/NewTablePage.jsx";
+import NewTablePage from "./components/players/NewTablePage.jsx";
 export const store = createStore(appStore, applyMiddleware(thunkMiddleware));
 
 

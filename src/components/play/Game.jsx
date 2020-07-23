@@ -17,7 +17,7 @@ import {
     setTableNumber,
     addNewGame,
     addNewRound, createNewTable
-} from "../action/ScoreAction";
+} from "../../action/ScoreAction";
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -26,9 +26,9 @@ import FormLabel from '@material-ui/core/FormLabel';
 import AlertDialog from './AlertDialog.jsx';
 import Round from './Round.jsx';
 import Paper from "@material-ui/core/Paper";
-import BasicPagination from "./BasicPagination.jsx";
+import BasicPagination from "../common/BasicPagination.jsx";
 import axios from "axios";
-import config from "./configuration";
+import config from "../common/configuration";
 
 
 const useStyles = makeStyles({

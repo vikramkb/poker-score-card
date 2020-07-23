@@ -2,20 +2,17 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Game from './Game.jsx';
-import {createNewTable, endTable, selectScoreCard, selectGameNumber} from '../action/ScoreAction';
-import SimpleAppBar from './AppBar.jsx';
-import ScoreTable from './ScoreTable.jsx';
+import {createNewTable, endTable, selectScoreCard, selectGameNumber} from '../../action/ScoreAction';
+import SimpleAppBar from '../common/AppBar.jsx';
+import ScoreTable from '../table/ScoreTable.jsx';
 import GameScore from './GameScore.jsx';
 
 export class Home extends React.Component {
-   showAllTables(history) {
-        history.push("all-tables");
-  }
   render() {
        console.log("Home", this.props.score.toJS());
       const score = this.props.score;
       if(!score.get("tables") || score.get("tables").size === 0){
-          return (<SimpleAppBar showAllTables={()=> {this.showAllTables(this.props.history)}} onCreateTableFn={() => this.props.history.push("/create-table")}/>);
+          return (<SimpleAppBar showAllTables={()=> {this.props.history.push("/all-tables")}} onCreateTableFn={() => this.props.history.push("/create-table")}/>);
       }
       const tables = score.get("tables");
       const tableNumber = score.get("tables").size-1;
@@ -32,7 +29,7 @@ export class Home extends React.Component {
     const r = games.get(selectedGameNumber-1);
     return (
         <div>
-            <SimpleAppBar showAllTables={()=> {this.showAllTables(this.props.history)}} onCreateTableFn={() => this.props.history.push("/create-table")}/>
+            <SimpleAppBar showAllTables={()=> {this.props.history.push("/all-tables")}} onCreateTableFn={() => this.props.history.push("/create-table")}/>
             <Game
                 isTableClosed = {table.get("closed")}
                 rounds = {r.get("rounds")}

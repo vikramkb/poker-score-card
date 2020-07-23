@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Switch from '@material-ui/core/Switch';
 import Paper from '@material-ui/core/Paper';
-import {playRound, foldRound, fixBet} from "../action/ScoreAction";
+import {playRound, foldRound, fixBet} from "../../action/ScoreAction";
 import { makeStyles } from '@material-ui/core/styles';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -13,7 +13,7 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import axios from "axios";
-import config from "./configuration";
+import config from "../common/configuration";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,

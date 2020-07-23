@@ -4,14 +4,14 @@ import {green} from '@material-ui/core/colors';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import {createNewTable, fetchTablesSuccessful} from '../action/ScoreAction';
+import {createNewTable, fetchTablesSuccessful} from '../../action/ScoreAction';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import Button from "@material-ui/core/Button";
 import axios from "axios";
-import config from "./configuration";
+import config from "../common/configuration";
 
 const GreenCheckbox = withStyles({
     root: {
