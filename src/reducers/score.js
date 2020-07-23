@@ -417,14 +417,15 @@ export default function score(state = defaultState, action = {}) {
                     const round1 = getNewRound(fullTableData.players.players, true, firstRoundBet);
                     rounds=[round1];
                 }
-                if(rounds.filter(r => !r.fixed).length !== 0) {
+                if(rounds.length <= 2 && rounds.filter(r => !r.fixed).length !== 0) {
                     const newRound = getNewRound(fullTableData.players.players, false, firstRoundBet);
-                    rounds.push(newRound);
+                    rounds.push(newRound.set("gameId", g.gameId));
                 }
                 return Map({
                     rounds: fromJS(rounds),
                     running: g.isRunning,
-                    winner: g.winnerName
+                    winner: g.winnerName,
+                    gameId: g.gameId
                 });
             });
 
