@@ -11,7 +11,8 @@ import {
     SELECT_GAME_NUMBER,
     SELECT_SCORE_CARD,
     SET_TABLE_NUMBER,
-    SUBMIT_WINNER
+    SUBMIT_WINNER,
+    FETCH_FULL_TABLE_SUCCESSFUL
 } from "../action/ScoreAction";
 import axios from 'axios';
 import config from "../components/common/configuration";
@@ -394,6 +395,46 @@ export default function score(state = defaultState, action = {}) {
         case FETCH_PLAYERS_SUCCESSFUL: {
             const players = List(action.playersData.map(p => p.playerName));
             return state.set("names", players);
+        }
+        case FETCH_FULL_TABLE_SUCCESSFUL: {
+            const fullTableData = action.fullTableData;
+            console.log("full table data", fullTableData);
+            const tableId=0;
+
+            const games = fullTableData.games.map(g => {
+                const rounds = fullTableData.tableGameRoundPlayers.filter(r => r.gameId === g.gameId).map(r => {
+                    return Map({
+                        bet: r.bidAmount,
+                        playerStatus: List(r.playerNames.map(p => {
+                            return Map({name: p, action: 'playing'})
+                        })),
+                        fixed: true
+                    });
+                });
+
+                return Map({
+                    rounds: rounds,
+                    running: g.isRunning
+                });
+            });
+
+            const nameIndexMap = {};
+            fullTableData.players.players.forEach((name, idx) => {
+                nameIndexMap[name] = idx;
+            });
+            const table = Map({
+                games: fromJS(games),
+                gameScores: List(),
+                totalScore: Map(),
+                running: fullTableData.table.isRunning,
+                players: List(fullTableData.players.players),
+                nameIdxMap: Map(nameIndexMap),
+                selectedGameNumber: games.length - 1,
+                tableId
+            });
+
+            console.log("new table", table.toJS());
+            return state.set("tables", fromJS([table])).set("names", List(fullTableData.players.players));
         }
         default:
             return state;

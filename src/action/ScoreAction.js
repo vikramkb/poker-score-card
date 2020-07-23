@@ -14,6 +14,7 @@ export const FETCH_TABLES_SUCCESSFUL = 'FETCH_TABLES_SUCCESSFUL';
 export const ADD_NEW_GAME = 'ADD_NEW_GAME';
 export const ADD_NEW_ROUND = 'ADD_NEW_ROUND';
 export const FETCH_PLAYERS_SUCCESSFUL = 'FETCH_PLAYERS_SUCCESSFUL';
+export const FETCH_FULL_TABLE_SUCCESSFUL = 'FETCH_FULL_TABLE_SUCCESSFUL';
 
 export const addNewScore = newData => ({
   type: ADD_NEW_SCORE,
@@ -118,4 +119,9 @@ export const fetchTablesSuccessful = (tablesData) => ({
 export const fetchPlayersSuccessful = (playersData) => ({
   type: FETCH_PLAYERS_SUCCESSFUL,
   playersData
+});
+
+export const fetchFullTableSuccessful = (fullTableData) => ({
+  type: FETCH_FULL_TABLE_SUCCESSFUL,
+  fullTableData
 });
