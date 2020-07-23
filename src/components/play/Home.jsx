@@ -67,6 +67,7 @@ export class Home extends React.Component {
                 dispatch={this.props.dispatch}
                 history={this.props.history}
                 tableNumber={tableNumber}
+                count={games.size}
             />
         </div>
     )

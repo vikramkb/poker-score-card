@@ -184,9 +184,9 @@ function getUpdatedRoundStatus(state, action) {
     let updatedGame = getGame(state, tableNumber, gameNumber).set("running", isGameRunning);
 
     const playingPlayers = getPlayerStatuses(state, tableNumber, gameNumber, roundNumber).filter(p => p.get("action") === "playing");
-    if (playingPlayers.size === 1) {
-        updatedGame = updatedGame.set("winner", playingPlayers.get(0).get("name")).set("running", false);
-    }
+    // if (playingPlayers.size === 1) {
+    //     updatedGame = updatedGame.set("winner", playingPlayers.get(0).get("name")).set("running", false);
+    // }
 
     let newState = state.set("tables", getTables(state)
         .set(tableNumber,
@@ -197,15 +197,16 @@ function getUpdatedRoundStatus(state, action) {
                     )))));
 
     let rounds = getRounds(newState, tableNumber, gameNumber);
-    if (playingPlayers.size !== 1 && rounds.size !== 3) {
+    // if (playingPlayers.size !== 1 && rounds.size !== 3) {
+    if (rounds.size !== 3) {
         return creatAndAddNewRound(newState, tableNumber, gameNumber);
     }
-    if (playingPlayers.size === 1) {
-        action.winner = playingPlayers.get(0).get("name");
-        action.tableId = getTable(newState, tableNumber).get("tableId");
-        action.gameId = getGame(newState, tableNumber, gameNumber).get("gameId");
-        return submitWinner(newState, action);
-    }
+    // if (playingPlayers.size === 1) {
+    //     action.winner = playingPlayers.get(0).get("name");
+    //     action.tableId = getTable(newState, tableNumber).get("tableId");
+    //     action.gameId = getGame(newState, tableNumber, gameNumber).get("gameId");
+    //     return submitWinner(newState, action);
+    // }
 
     return newState;
 }
@@ -402,7 +403,7 @@ export default function score(state = defaultState, action = {}) {
             const tableId=0;
 
             const games = fullTableData.games.map(g => {
-                const rounds = fullTableData.tableGameRoundPlayers.filter(r => r.gameId === g.gameId).map(r => {
+                let rounds = fullTableData.tableGameRoundPlayers.filter(r => r.gameId === g.gameId).map(r => {
                     return Map({
                         bet: r.bidAmount,
                         playerStatus: List(r.playerNames.map(p => {
@@ -412,8 +413,16 @@ export default function score(state = defaultState, action = {}) {
                     });
                 });
 
+                if(rounds.length === 0) {
+                    const round1 = getNewRound(fullTableData.players.players, true, firstRoundBet);
+                    rounds=[round1];
+                }
+                if(rounds.filter(r => !r.fixed).length !== 0) {
+                    const newRound = getNewRound(fullTableData.players.players, false, firstRoundBet);
+                    rounds.push(newRound);
+                }
                 return Map({
-                    rounds: rounds,
+                    rounds: fromJS(rounds),
                     running: g.isRunning,
                     winner: g.winnerName
                 });
@@ -443,8 +452,9 @@ export default function score(state = defaultState, action = {}) {
                 running: fullTableData.table.isRunning,
                 players: List(fullTableData.players.players),
                 nameIdxMap: Map(nameIndexMap),
-                selectedGameNumber: games.length - 1,
-                tableId: fullTableData.table.tableId
+                selectedGameNumber: games.length,
+                tableId: fullTableData.table.tableId,
+                pageNumber: games.length
             });
 
             console.log("new table", table.toJS());

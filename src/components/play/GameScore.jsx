@@ -28,15 +28,18 @@ const useStyles = makeStyles({
 export default function ScoreTable(props) {
     console.log("Score Table", props);
     const classes = useStyles();
+    let pageNumber = props.pageNumber && props.pageNumber - 1 >= 0 ? props.pageNumber - 1 : 0;
+    let values = props.gameScores.get(pageNumber);
     return (
         <Card className={classes.root} variant="root">
             <CardContent>
                 <Typography variant="h5" gutterBottom>
                     All Games Score Table
                 </Typography>
-                {props.gameScores.size > 0 ? <SimpleTable names={props.names}
-                                                           values={props.gameScores.get(props.pageNumber && props.pageNumber - 1 >= 0 ? props.pageNumber - 1 : 0)}
-                                                           count={props.games.filter(g => !g.running).size} onChangeFn={(pageNumber) => {
+                {props.gameScores.size > 0  ? <SimpleTable names={props.names}
+                                                           values={values}
+                                                           page={pageNumber+1}
+                                                           count={props.count} onChangeFn={(pageNumber) => {
 
                     props.dispatch(selectScoreCard(props.tableNumber, pageNumber))
                 }}/> : ''}

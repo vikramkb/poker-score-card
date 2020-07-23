@@ -64,7 +64,7 @@ export default function SimpleTable(props) {
                 </Grid>
             </CardContent>
             <CardActions>
-                {props.count ? <BasicPagination count={props.count} onChangeFn={props.onChangeFn}/> : ''}
+                {props.count ? <BasicPagination count={props.count}  page={props.page} onChangeFn={props.onChangeFn}/> : ''}
             </CardActions>
         </Card>
 
