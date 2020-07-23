@@ -414,7 +414,8 @@ export default function score(state = defaultState, action = {}) {
 
                 return Map({
                     rounds: rounds,
-                    running: g.isRunning
+                    running: g.isRunning,
+                    winner: g.winnerName
                 });
             });
 

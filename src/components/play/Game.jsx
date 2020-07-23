@@ -74,6 +74,7 @@ export default function Game(props) {
         axios.post(`${config[config.env].apiBasePath}/table/game/status`, {
             "tableId": tableId,
             "gameId": gameId,
+            "winnerName": finalWinner,
             "isRunning": false
         }).then(result => {
             dispatch(submitWinner(tableNumber, gameNumber, finalWinner, tableId, gameId));
@@ -154,7 +155,7 @@ export default function Game(props) {
             <CardActions>
                 <BasicPagination page={props.page} count={props.count} onChangeFn={props.onChangeFn}/>
                 {
-                    !props.isTableClosed ?
+                    !running && winner && !props.isTableClosed ?
                         <Button variant="contained" color="primary" onClick={() => {
                             axios.post(`${config[config.env].apiBasePath}/table/game`, {
                                 "tableId": tableId,
