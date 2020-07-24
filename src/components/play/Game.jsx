@@ -140,7 +140,7 @@ export default function Game(props) {
                     rounds.map((r, idx) => roundDetails(idx, r))
                 }
                 {
-                    rounds.size === 3 && !winner && !running && !props.isTableClosed ?
+                    rounds.size === 3 && !winner && rounds.get(2).get("fixed") && !props.isTableClosed ?
                         <div>
                             <Typography className={classes.title} color="textPrimary">
                                 Choose Winner
