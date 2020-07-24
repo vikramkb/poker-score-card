@@ -162,16 +162,15 @@ export default function Game(props) {
                                 "gameSequence": props.page+1,
                                 "isRunning": true
                             }).then(gameResult => {
-                                // axios.post(`${config[config.env].apiBasePath}/table/game/round`, {
-                                //     "tableId": tableId,
-                                //     "gameId": gameResult.data,
-                                //     "roundSequence": 1,
-                                //     "playerNames": tablePlayers.toJS(),
-                                //     "bidAmount": 10
-                                // }).then(roundResult => {
+                                axios.post(`${config[config.env].apiBasePath}/table/game/round`, {
+                                    "tableId": tableId,
+                                    "gameId": gameResult.data,
+                                    "roundSequence": 1,
+                                    "playerNames": tablePlayers.toJS(),
+                                    "bidAmount": 10
+                                }).then(roundResult => {
                                     props.dispatch(addNewGame(props.tableNumber, gameResult.data));
-                                // });
-
+                                });
                             });
                         }}>
                             Add New Game
