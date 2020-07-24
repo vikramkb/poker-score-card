@@ -12,6 +12,9 @@ import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import Button from "@material-ui/core/Button";
 import axios from "axios";
 import config from "../common/configuration";
+import OrderList from "../common/OrderList.jsx";
+import TextField from "@material-ui/core/TextField";
+import CardContent from "@material-ui/core/CardContent";
 
 const GreenCheckbox = withStyles({
     root: {
@@ -25,18 +28,36 @@ const GreenCheckbox = withStyles({
 
 export default function Players(props) {
     const [state, setState] = React.useState({});
+    const [topPlayersCount, setTopPlayersCount] = React.useState(0);
+    const [selectedPlayers, setSelectedPlayers] = React.useState(props.playerNames);
+
 
     const handleChange = (event) => {
-        setState({...state, [event.target.name]: event.target.checked});
+        // setState({...state, [event.target.name]: event.target.checked});
+        // if(event.target.checked){
+        //     let newSelectedPlayers = selectedPlayers.map(p=>p);
+        //     newSelectedPlayers.push(event.target.name);
+        //     setSelectedPlayers([
+        //         ...selectedPlayers,
+        //         event.target.name
+        //     ]);
+        // }else{
+        //     setSelectedPlayers(selectedPlayers.filter(p => p !== event.target.name));
+        // }
     };
 
     function createTable() {
+        const playersMap = {};
+        const players = selectedPlayers.filter((p,idx) => idx < topPlayersCount);
+        players.forEach(p => {
+            playersMap[p] = true;
+        });
         axios.post(`${config[config.env].apiBasePath}/table`, {
             "tableName": "test table",
             "createdPlayerName": "vikram",
             "isRunning": true
         }).then(tableResult => {
-            const players = Object.keys(state).filter(idx => state[idx]);
+            // const players = Object.keys(state).filter(idx => state[idx]);
 
             axios.post(`${config[config.env].apiBasePath}/table/player`, {
                 "tableId": tableResult.data,
@@ -56,7 +77,7 @@ export default function Players(props) {
                         "bidAmount": 10
                     }).then(roundResult => {
                         props.history.push("/home");
-                        props.dispatch(createNewTable(tableResult.data, gameResult.data, roundResult.data, state));
+                        props.dispatch(createNewTable(tableResult.data, gameResult.data, roundResult.data, playersMap));
                     }, {
                         "Access-Control-Allow-Origin": "*"
                     });
@@ -66,31 +87,42 @@ export default function Players(props) {
     }
 
     return (
-        <FormGroup row>
-            {
-                props.playerNames.map(n => {
-                    return (
-                        <FormControlLabel
-                            control={
+        <div>
+            <FormGroup row>
+                {/*{*/}
+                {/*    props.playerNames.map(n => {*/}
+                {/*        return (*/}
+                {/*            <FormControlLabel*/}
+                {/*                control={*/}
 
-                                <Checkbox
-                                    onChange={handleChange}
-                                    name={n}
-                                    color="primary"
-                                />
-                            }
-                            label={n}
-                        />)
-                })
-            }
-            <FormControlLabel
-                control={
-                    <Button variant="contained" color="primary" onClick={createTable}>
-                        Start Playing
-                    </Button>
-                }
-                label=""
-            />
-        </FormGroup>
+                {/*                    <Checkbox*/}
+                {/*                        onChange={handleChange}*/}
+                {/*                        name={n}*/}
+                {/*                        color="primary"*/}
+                {/*                    />*/}
+                {/*                }*/}
+                {/*                label={n}*/}
+                {/*            />)*/}
+                {/*    })*/}
+                {/*}*/}
+                <OrderList players={props.playerNames} setSelectedPlayers={setSelectedPlayers}/>
+                <FormControlLabel
+                    control={
+                        <TextField id="outlined-basic" label="Which players from top?" variant="outlined"
+                                   defaultValue={0} onChange={(event)=>setTopPlayersCount(parseInt(event.target.value, 10))} type="number"/>
+                    }
+                    label=""
+                />
+
+                <FormControlLabel
+                    control={
+                        <Button variant="contained" color="primary" onClick={createTable}>
+                            Start Playing
+                        </Button>
+                    }
+                    label=""
+                />
+            </FormGroup>
+        </div>
     );
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import {createNewTable} from "../../action/ScoreAction";
 import SimpleAppBar from "../common/AppBar.jsx";
+import OrderList from "../common/OrderList.jsx";
 import {connect} from "react-redux";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
