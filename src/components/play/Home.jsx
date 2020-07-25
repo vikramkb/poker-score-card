@@ -29,7 +29,7 @@ export class Home extends React.Component {
     const r = games.get(selectedGameNumber-1);
     return (
         <div>
-            <SimpleAppBar showAllTables={()=> {this.props.history.push("/all-tables")}} onCreateTableFn={() => this.props.history.push("/create-table")}/>
+            <SimpleAppBar showAllTables={()=> {this.props.history.push("/all-tables")}} onCreateTableFn={() => this.props.history.push("/create-table")}  showPlayerScore={()=>this.props.history.push("/player-score")}/>
             <Game
                 isTableClosed = {table.get("closed")}
                 rounds = {r.get("rounds")}

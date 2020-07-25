@@ -4,13 +4,14 @@ import {connect} from "react-redux";
 import Players from "./Players.jsx";
 import axios from "axios";
 import config from "../common/configuration";
-import {fetchPlayersSuccessful} from "../../action/ScoreAction";
+import {fetchPlayersSuccessful, fetchPlayerScoreSuccessful} from "../../action/ScoreAction";
+import SimpleTable from "../common/SimpleTable.jsx";
 
 export class NewTablePage extends React.Component {
     componentDidMount() {
-        axios.get(`${config[config.env].apiBasePath}/players`)
-            .then(playerResult => {
-                this.props.dispatch(fetchPlayersSuccessful(playerResult.data));
+        axios.get(`${config[config.env].apiBasePath}/player/score`)
+            .then(playerScoreResult => {
+                this.props.dispatch(fetchPlayerScoreSuccessful(playerScoreResult.data));
             })
     }
 
@@ -19,8 +20,8 @@ export class NewTablePage extends React.Component {
             <div>
                 <SimpleAppBar showAllTables={() => {this.props.history.push("/all-tables")}} onCreateTableFn={() => this.props.history.push("/create-table")} showPlayerScore={()=>this.props.history.push("/player-score")}/>
                 {
-                    !this.props.names || this.props.names.size === 0 ? '' :
-                        <Players playerNames={this.props.names} dispatch={this.props.dispatch} history={this.props.history}/>
+                    !this.props.playerScores || this.props.playerScores.size === 0 ? '' :
+                        <SimpleTable names={Object.keys(this.props.playerScores.toJS())} values={Object.keys(this.props.playerScores.toJS()).map(k => this.props.playerScores.toJS()[k])}/>
                 }
             </div>
         )
@@ -29,7 +30,7 @@ export class NewTablePage extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    names: state.score.get("names")
+    playerScores: state.score.get("playerScores")
 });
 
 export default connect(mapStateToProps)(NewTablePage);

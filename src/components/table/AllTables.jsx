@@ -24,7 +24,7 @@ export class AllTables extends React.Component {
     render() {
         const allTables = this.props.allTables;
         if(!allTables || allTables.length === 0){
-            return (<SimpleAppBar showAllTables={()=> {this.props.history.push("/all-tables")}} onCreateTableFn={() => this.props.history.push("/create-table")}/>);
+            return (<SimpleAppBar showAllTables={()=> {this.props.history.push("/all-tables")}} onCreateTableFn={() => this.props.history.push("/create-table")} showPlayerScore={()=>this.props.history.push("/player-score")}/>);
         }
         console.log("AllTables all tables", allTables.toJS());
         // const tableNumber = score.tables.length-1;
@@ -38,7 +38,7 @@ export class AllTables extends React.Component {
 
         return (
             <div>
-                <SimpleAppBar showAllTables={() => this.props.history.push("/all-tables")} onCreateTableFn={() => this.props.history.push("/create-table")}/>
+                <SimpleAppBar showAllTables={() => this.props.history.push("/all-tables")} onCreateTableFn={() => this.props.history.push("/create-table")}  showPlayerScore={()=>this.props.history.push("/player-score")}/>
                 <AllTableScore
                     tables={allTables}
                     // names={names}

@@ -15,6 +15,7 @@ export const ADD_NEW_GAME = 'ADD_NEW_GAME';
 export const ADD_NEW_ROUND = 'ADD_NEW_ROUND';
 export const FETCH_PLAYERS_SUCCESSFUL = 'FETCH_PLAYERS_SUCCESSFUL';
 export const FETCH_FULL_TABLE_SUCCESSFUL = 'FETCH_FULL_TABLE_SUCCESSFUL';
+export const FETCH_PLAYER_SCORE_SUCCESSFUL = 'FETCH_PLAYER_SCORE_SUCCESSFUL';
 
 export const addNewScore = newData => ({
   type: ADD_NEW_SCORE,
@@ -78,6 +79,11 @@ export const addNewGame = (tableNumber, gameId, roundId) => ({
   tableNumber,
   gameId,
   roundId
+});
+
+export const fetchPlayerScoreSuccessful = (playerScores) => ({
+  type: FETCH_PLAYER_SCORE_SUCCESSFUL,
+  playerScores
 });
 
 export const addNewRound = (tableNumber, gameNumber) => ({

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import './index.css';
 import Home from './components/play/Home.jsx';
+import PlayerScore from './components/players/PlayerScore.jsx';
 import AllTables from './components/table/AllTables.jsx';
 import * as serviceWorker from './serviceWorker';
 import { applyMiddleware, createStore } from 'redux';
@@ -22,6 +23,8 @@ ReactDOM.render(
                     <Route exact path="/home" component={Home} />
                     <Route exact path="/all-tables" component={AllTables} />
                     <Route exact path="/create-table" component={NewTablePage} />
+                    <Route exact path="/player-score" component={PlayerScore} />
+
                 </Switch>
 
             </div>

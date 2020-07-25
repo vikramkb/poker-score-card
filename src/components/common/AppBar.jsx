@@ -103,6 +103,15 @@ export default function SimpleAppBar(props) {
                                 </ListItemIcon>
                                 <ListItemText primary="Show Tables" />
                             </StyledMenuItem>
+                            <StyledMenuItem onClick={() => {
+                                props.showPlayerScore();
+                                handleClose();
+                            }}>
+                                <ListItemIcon>
+                                    <DraftsIcon fontSize="small" />
+                                </ListItemIcon>
+                                <ListItemText primary="Player Score" />
+                            </StyledMenuItem>
 
                         </StyledMenu>
                     </div>

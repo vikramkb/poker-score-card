@@ -12,7 +12,8 @@ import {
     SELECT_SCORE_CARD,
     SET_TABLE_NUMBER,
     SUBMIT_WINNER,
-    FETCH_FULL_TABLE_SUCCESSFUL
+    FETCH_FULL_TABLE_SUCCESSFUL,
+    FETCH_PLAYER_SCORE_SUCCESSFUL
 } from "../action/ScoreAction";
 import axios from 'axios';
 import config from "../components/common/configuration";
@@ -25,7 +26,8 @@ const firstRoundBet = 10;
 const defaultState = Map({
     names: List(),
     tables: List(),
-    allTables: List()
+    allTables: List(),
+    playerScores: Map()
 });
 
 function getUpdatedScore(game, totalScore) {
@@ -461,6 +463,9 @@ export default function score(state = defaultState, action = {}) {
 
             console.log("new table", table.toJS());
             return state.set("tables", fromJS([table])).set("names", List(fullTableData.players.players));
+        }
+        case FETCH_PLAYER_SCORE_SUCCESSFUL: {
+            return state.set("playerScores", Map(action.playerScores));
         }
         default:
             return state;
