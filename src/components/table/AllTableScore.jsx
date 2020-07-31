@@ -37,7 +37,7 @@ export default function AllTableScore(props) {
                         const scores = t.get("tablePlayerTotalScore").get("scores");
                         const table = t.get("table");
                         return (<ScoreTable
-                            title="Table Total Score"
+                            title={`Table Total Score : ${table.get("timestamp").toString()}`}
                             isRealGame={table.get("realGame")}
                             isCompleted={table.get("isRunning")}
                             tableName={table.get("tableName")}
