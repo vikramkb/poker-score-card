@@ -69,7 +69,7 @@ export default function Game(props) {
     const classes = useStyles();
     const [finalWinner, setFinalWinner] = React.useState('');
 
-
+    console.log("openCardPlayerId", props.openCardPlayerId, "openCardPlayerName", props.openCardPlayerName);
     function handleWinnerSubmit() {
         axios.post(`${config[config.env].apiBasePath}/table/game/status`, {
             "tableId": tableId,
@@ -117,6 +117,9 @@ export default function Game(props) {
                       gameId={gameId}
                       dispatch={dispatch}
                       isTableClosed={props.isTableClosed}
+                      openCardPlayerId={props.openCardPlayerId}
+                      openCardPlayerName={props.openCardPlayerName}
+                      players={props.players}
         />
     }
 

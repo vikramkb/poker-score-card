@@ -42,3 +42,7 @@ body {
   left: 45vw;
   top: 40vh;
 }
+
+.open-card-player {
+    background-color: red;
+}

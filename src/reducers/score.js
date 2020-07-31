@@ -291,8 +291,13 @@ export default function score(state = defaultState, action = {}) {
             const newState = state.set("tables", getTables(state)
                 .set(tableNumber,
                     getTable(state, tableNumber).set("games", getGames(state, tableNumber).push(newGame))));
+
+            let playerIndex = (table.get("openCardPlayerIdx") + 1) % (table.get("players").size);
             return state.set("tables", getTables(newState)
-                .set(tableNumber, getTable(newState, tableNumber).set("selectedGameNumber", getGames(newState, tableNumber).size)));
+                .set(tableNumber, getTable(newState, tableNumber)
+                    .set("openCardPlayerIdx", playerIndex)
+                    .set("openCardPlayerName", table.get("players").get(playerIndex))
+                    .set("selectedGameNumber", getGames(newState, tableNumber).size)));
         }
         case ADD_NEW_ROUND: {
         }
@@ -311,7 +316,9 @@ export default function score(state = defaultState, action = {}) {
             Object.keys(action.players).forEach((p, idx) => {
                 nameIdxMap[p] = idx
             });
-            const newTable = getNewTable(players, nameIdxMap, tableId, gameId, roundId);
+            const newTable = getNewTable(players, nameIdxMap, tableId, gameId, roundId)
+                .set("openCardPlayerName", players[0])
+                .set("openCardPlayerIdx", 0);
             return state.set("tables", getTables(state).push(newTable));
         }
         case SELECT_SCORE_CARD: {

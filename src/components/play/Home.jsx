@@ -17,6 +17,8 @@ export class Home extends React.Component {
       const tables = score.get("tables");
       const tableNumber = score.get("tables").size-1;
       const table = tables.get(tableNumber);
+      const openCardPlayerIdx = table.get("openCardPlayerIdx");
+      const openCardPlayerName = table.get("openCardPlayerName");
       const tableId = table.get("tableId");
       const gameScores = table.get("gameScores");
       const totalScore = table.get("totalScore");
@@ -35,6 +37,8 @@ export class Home extends React.Component {
                 rounds = {r.get("rounds")}
                 winner = {r.get("winner")}
                 tablePlayers = {table.get("players")}
+                openCardPlayerId = {openCardPlayerIdx}
+                openCardPlayerName = {openCardPlayerName}
                 running = {r.get("running")}
                 tableRunning = {table.get("running")}
                 tableNumber={tableNumber}
@@ -44,6 +48,7 @@ export class Home extends React.Component {
                 dispatch={this.props.dispatch}
                 page={selectedGameNumber}
                 count={games.size}
+                players={table.get("players")}
                 onChangeFn={(selectedGameNumber)=> {
                 this.props.dispatch(selectGameNumber(tableNumber, selectedGameNumber))
             }}/>

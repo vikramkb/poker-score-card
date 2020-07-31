@@ -35,9 +35,18 @@ export default function Round(props) {
     const gameNumber = props.gameNumber;
     const dispatch = props.dispatch;
     const [bet, setBet] = React.useState(props.round.get("bet"));
+    let openCardPlayerName = props.openCardPlayerName;
+    if(round.get("playerStatus").toJS().indexOf(openCardPlayerName) === -1){
+        for(let i=0; i < props.players.size; i++) {
+            let playerIdx = (i + props.openCardPlayerId) % props.players.size;
+            openCardPlayerName = props.players.get(playerIdx);
+            if(round.get("playerStatus").toJS().filter(p => p.action === "playing").map(p => p.name).indexOf(openCardPlayerName) >= 0) {
+                break;
+            }
+        }
+    }
 
-
-    function player(playerIdx, roundNumber, player, fixed) {
+    function player(playerIdx, roundNumber, player, fixed, isOpenCardPlayer) {
         const handleChange = (event) => {
             if (event.target.checked) {
                 dispatch(playRound(tableNumber, gameNumber, roundNumber, playerIdx, event.target.name));
@@ -57,7 +66,7 @@ export default function Round(props) {
                         <Switch
                         checked={player.get("action") === 'playing'}
                         onChange={handleChange}
-                        color="primary"
+                        color={isOpenCardPlayer ? "secondary" : "primary"}
                         name={player}
                         disabled={fixed || props.isTableClosed}
                         inputProps={{'aria-label': 'primary checkbox'}}
@@ -100,7 +109,7 @@ export default function Round(props) {
                         <br></br>
                         {
                             <FormGroup row>
-                                {round.get("playerStatus").map((p, idx) => player(idx, roundNumber, p, round.get("fixed")))}
+                                {round.get("playerStatus").map((p, idx) => player(idx, roundNumber, p, round.get("fixed"), openCardPlayerName === p.get("name")))}
                             </FormGroup>
                         }
                     </CardContent>
