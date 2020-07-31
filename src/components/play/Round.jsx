@@ -81,16 +81,21 @@ export default function Round(props) {
     }
 
     function hanldeFixBet() {
+        let playerNames = round.get("playerStatus").filter(p => p.get("action") === 'playing').map(p => p.get("name"));
+        if(playerNames.size === 0){
+            return;
+        }
         axios.post(`${config[config.env].apiBasePath}/table/game/round`, {
             "tableId": tableId,
             "gameId": gameId,
             "roundSequence": roundNumber+1,
-            "playerNames": round.get("playerStatus").filter(p => p.get("action") === 'playing').map(p => p.get("name")),
+            "playerNames": playerNames,
             "bidAmount": bet
         }).then(result => {
             dispatch(fixBet(tableNumber, gameNumber, roundNumber, bet));
         });
     }
+    const playerNames = round.get("playerStatus").filter(p => p.get("action") === 'playing').map(p => p.get("name"));
     return (
         <div className="round">
             {/*<Paper elevation={1} className={classes.paper}>*/}
@@ -115,7 +120,7 @@ export default function Round(props) {
                     </CardContent>
                     <CardActions>
                         {
-                            round.get("fixed") === false ? <Button variant="contained" color="primary" onClick={hanldeFixBet} disabled={props.isTableClosed}>
+                            round.get("fixed") === false ? <Button variant="contained" color="primary" onClick={hanldeFixBet} disabled={props.isTableClosed || playerNames.size === 0}>
                                 Fix Bet
                             </Button> : ''
                         }
