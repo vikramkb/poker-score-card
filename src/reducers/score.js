@@ -465,8 +465,10 @@ export default function score(state = defaultState, action = {}) {
                 nameIdxMap: Map(nameIndexMap),
                 selectedGameNumber: games.length,
                 tableId: fullTableData.table.tableId,
-                pageNumber: gameScores.size
-            });
+                pageNumber: gameScores.size,
+                openCardPlayerName: fullTableData.players.players[0],
+                openCardPlayerIdx: 0
+        });
 
             console.log("new table", table.toJS());
             return state.set("tables", fromJS([table])).set("names", List(fullTableData.players.players));
