@@ -26,7 +26,7 @@
     "immutable": "^4.0.0-rc.12",
     "material-table": "^1.64.0",
     "mini-css-extract-plugin": "^0.5.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "react": "^16.13.1",
     "react-archer": "^2.0.0",
     "react-arrows": "^1.0.2",
